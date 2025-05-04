@@ -1,4 +1,4 @@
-import './App.css'
+import '../shared/ui/App.css'
 
 function App() {
 
