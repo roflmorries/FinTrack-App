@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "./types";
 import { RootState } from "../../../app/store/store";
-import { signInUser, registerUser } from "./userThunks";
+import { signInUser, registerUser, signInUserWithGoogle } from "./userThunks";
 
 interface UserState {
   user: User | null,
@@ -61,6 +61,20 @@ const userSlice = createSlice({
       state.isLoading = false;
     }),
     builder.addCase(registerUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as string;
+    }),
+
+    builder.addCase(signInUserWithGoogle.pending, state => {
+      state.isLoading = true;
+      state.error = null;
+    }),
+    builder.addCase(signInUserWithGoogle.fulfilled, (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      state.isAuth = true;
+      state.isLoading = false;
+    }),
+    builder.addCase(signInUserWithGoogle.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload as string;
     })
