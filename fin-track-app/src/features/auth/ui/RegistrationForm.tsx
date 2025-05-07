@@ -1,14 +1,35 @@
 import { Button, Form, Input, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid';
+import { registerUser } from '../../../entities/user/model/userThunks';
+import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 
 export default function RegistrationForm({}: Props) {
+
   const [avatar, setAvatar] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAppSelector((state) => state.user)
+  const navigate = useNavigate();
 
-  const handleRegisterForm = () => {
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/dashboard', {replace: true})
+    }
+  }, [isAuth, navigate])
 
+
+
+  const handleRegisterForm = (values: any) => {
+    try {const id = uuidv4();
+    const newUser = {id, ...values, avatar}
+    console.log(newUser)
+    dispatch(registerUser(newUser))} catch (error) {
+      console.error(error);
+    }
   }
 
   const handleUploadAvatar = (file: RcFile) => {
@@ -46,7 +67,9 @@ export default function RegistrationForm({}: Props) {
       label='Password'
       name='password'
       rules={[{ required: true, message: 'Введите ваш пароль!' }]}
-      ></Form.Item>
+      >
+        <Input/>
+      </Form.Item>
 
       <Form.Item
       label='Avatar'
@@ -66,7 +89,7 @@ export default function RegistrationForm({}: Props) {
           />
         )}
       </Form.Item>
-
+      <Button type="primary" htmlType="submit">Register</Button>
     </Form>
   )
 }
