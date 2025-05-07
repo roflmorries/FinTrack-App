@@ -24,7 +24,8 @@ export default function RegistrationForm({}: Props) {
 
 
   const handleRegisterForm = (values: any) => {
-    try {const id = uuidv4();
+    try {
+    const id = uuidv4();
     const newUser = {id, ...values, avatar}
     console.log(newUser)
     dispatch(registerUser(newUser))} catch (error) {
