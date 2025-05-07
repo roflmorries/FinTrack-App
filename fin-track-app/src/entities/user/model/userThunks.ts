@@ -59,10 +59,28 @@ export const signInUserWithGoogle = createAsyncThunk<User>('user/signInUserWithG
         users.push(existingUser);
         localStorage.setItem('mock_users', JSON.stringify(users))
       }
+
+      localStorage.setItem('user', JSON.stringify(existingUser));
       localStorage.setItem('users', JSON.stringify(users));
       return existingUser as User;
     } catch(error) {
       return rejectWithValue('Google login failed');
   }
+  }
+);
+
+export const checkAuth = createAsyncThunk<User, void, {rejectValue: string}>('user/checkAuth',
+  async (__dirname, {rejectWithValue}) => {
+    const raw = localStorage.getItem('user')
+
+    try {
+      if (!raw) {
+        return rejectWithValue('No user data found');
+      }
+      const user: User = JSON.parse(raw);
+      return user;
+    } catch (error){
+      return rejectWithValue('Ошибка при чтении данных')
+    }
   }
 )

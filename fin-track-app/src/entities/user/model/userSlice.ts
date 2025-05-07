@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "./types";
 import { RootState } from "../../../app/store/store";
-import { signInUser, registerUser, signInUserWithGoogle } from "./userThunks";
+import { signInUser, registerUser, signInUserWithGoogle, checkAuth } from "./userThunks";
 
 interface UserState {
   user: User | null,
@@ -77,6 +77,20 @@ const userSlice = createSlice({
     builder.addCase(signInUserWithGoogle.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload as string;
+    })
+
+    builder.addCase(checkAuth.pending, state => {
+      state.isLoading = true;
+      state.error = null;
+    }),
+    builder.addCase(checkAuth.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isAuth = true;
+      state.isLoading = false;
+    }),
+    builder.addCase(checkAuth.rejected, (state) => {
+      state.isLoading = false;
+      state.isAuth = false;
     })
   }
 });
