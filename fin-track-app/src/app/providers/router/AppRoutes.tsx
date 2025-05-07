@@ -13,7 +13,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginPage/>}/>
 
       <Route element={<PrivateRoute/>}>
-        <Route element={<ApplicationPage/>}>
+        <Route path="/dashboard" element={<ApplicationPage/>}>
           {/* ...TBC */}
         </Route>
       </Route>
