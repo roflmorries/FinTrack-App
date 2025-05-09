@@ -1,10 +1,10 @@
 import { Button, Form, Input, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload';
 import { useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid';
 import { registerUser } from '../../../entities/user/model/userThunks';
 import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
 import { useNavigate } from 'react-router-dom';
+import imageCompression from 'browser-image-compression';
 
 type Props = {}
 
@@ -25,21 +25,30 @@ export default function RegistrationForm({}: Props) {
 
   const handleRegisterForm = (values: any) => {
     try {
-    const id = uuidv4();
-    const newUser = {id, ...values, avatar}
+    const newUser = {...values, avatar}
     console.log(newUser)
     dispatch(registerUser(newUser))} catch (error) {
       console.error(error);
     }
   }
 
-  const handleUploadAvatar = (file: RcFile) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setAvatar(reader.result as string);
+  const handleUploadAvatar = async (file: RcFile) => {
+    const options = {
+      maxSizeMB: 0.5, // максимум 500KB
+      maxWidthOrHeight: 300, // зменшує до 300x300
+      useWebWorker: true,
     };
-    reader.readAsDataURL(file);
+  
+    try {
+      const compressedFile = await imageCompression(file, options);
+      const base64 = await imageCompression.getDataUrlFromFile(compressedFile);
+      setAvatar(base64);
+    } catch (err) {
+      console.error('❌ Image compression failed:', err);
+    }
+  
     return false;
+  
   }
 
   return (
@@ -47,7 +56,7 @@ export default function RegistrationForm({}: Props) {
 
       <Form.Item
       label='Fullname'
-      name='fullname'
+      name='fullName'
       rules={[{ required: true, message: 'Введите ваше имя!' }]}
       >
         <Input/>
