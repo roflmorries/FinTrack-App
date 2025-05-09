@@ -1,86 +1,60 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { User } from "./types";
 import { createAsyncThunk} from "@reduxjs/toolkit";
-import { auth } from "../../../shared/config/firebase";
+import { auth, db, storage } from "../../../shared/config/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 
-export const registerUser = createAsyncThunk<User, User>('user/registerUser', 
-  async (newUser, {rejectWithValue}) => {
-    const raw = localStorage.getItem('mock_users');
-    const users: User[] = raw ? JSON.parse(raw) : [];
-
-    const exist = users.find(u => u.email === newUser.email);
-    if (exist) return rejectWithValue('User already exist');
-
-    const updated = [...users, newUser];
-    localStorage.setItem('mock_users', JSON.stringify(updated));
-    localStorage.setItem('user', JSON.stringify(newUser));
-    return newUser
-  }
-);
-
-export const signInUser = createAsyncThunk<User, {email: string; password: string}>('user/signInUser',
-  async ({email, password}, {rejectWithValue}) => {
-    const raw = localStorage.getItem('mock_users');
-    const users: User[] = raw ? JSON.parse(raw) : [];
-
-    const foundUser = users.find(u => u.email === email && u.password === password);
-    if (!foundUser) return rejectWithValue('Wrong email or password');
-
-    localStorage.setItem('user', JSON.stringify(foundUser));
-    return foundUser;
-  }
-);
-
-export const signInUserWithGoogle = createAsyncThunk<User>('user/signInUserWithGoogle',
-  async (_, {rejectWithValue}) => {
+export const registerUser = createAsyncThunk<User,
+  { email: string; password: string; fullName: string; avatar: string;},
+  { rejectValue: string }>
+  ('user/registerUser',
+  async ({ email, fullName, password, avatar}, {rejectWithValue}) => {
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user
+      console.log('creating user')
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = result.user.uid;
 
-      if (!user.email) {
-        return rejectWithValue('Google account has no email');
-      };
+      const avatarRef = ref(storage, `avatars/${uid}`);
+      await uploadString(avatarRef, avatar, 'data_url');
+      const avatarUrl = await getDownloadURL(avatarRef);
 
-      const raw = localStorage.getItem('mock_users');
-      const users: User[] = raw ? JSON.parse(raw) : [];
+      console.log('user create with uid', uid)
 
-      let existingUser = users.find((u) => u.email === user.email)
+      const userData: User = { uid, email, fullName, avatar: avatarUrl };
+      console.log(userData)
 
-      if (!existingUser) {
-        existingUser = {
-          id: user.uid,
-          fullName: user.displayName || '',
-          email: user.email,
-          avatarUrl: user.photoURL || '',
-          password: '', 
-          token: ''
-        };
-        users.push(existingUser);
-        localStorage.setItem('mock_users', JSON.stringify(users))
-      }
-
-      localStorage.setItem('user', JSON.stringify(existingUser));
-      localStorage.setItem('users', JSON.stringify(users));
-      return existingUser as User;
-    } catch(error) {
-      return rejectWithValue('Google login failed');
-  }
-  }
-);
-
-export const checkAuth = createAsyncThunk<User, void, {rejectValue: string}>('user/checkAuth',
-  async (__dirname, {rejectWithValue}) => {
-    const raw = localStorage.getItem('user')
-
-    try {
-      if (!raw) {
-        return rejectWithValue('No user data found');
-      }
-      const user: User = JSON.parse(raw);
-      return user;
-    } catch (error){
-      return rejectWithValue('Ошибка при чтении данных')
+      console.log('writing user to store')
+      await setDoc(doc(db, 'users', uid), userData);
+      console.log('success')
+      
+      return userData;
+    } catch (error: any) {
+      console.error('❌ Firebase error:', error.code, error.message);
+      return rejectWithValue(error.message)
     }
+  }
+);
+
+export const loginUser = createAsyncThunk<User, { email: string; password: string }>('user/loginUser',
+  async ({email, password}, {rejectWithValue}) => {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const uid = result.user.uid;
+
+      const userData = await getDoc(doc(db, 'users', uid));
+      if (!userData.exists()) throw new Error('user not found')
+
+      return userData.data() as User;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchUserData = createAsyncThunk<User, string>('user/fetchUserData', 
+  async uid => {
+    const userData = await getDoc(doc(db, 'users', uid));
+    return userData.data() as User;
   }
 )
