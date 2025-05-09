@@ -1,8 +1,6 @@
-export type User = {
-  id: string,
+export interface User {
+  uid: string,
   fullName: string,
   email: string,
-  password: string,
-  avatarUrl: string,
-  token: string
+  avatar: string,
 };
