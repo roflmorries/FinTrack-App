@@ -32,24 +32,14 @@ export default function RegistrationForm({}: Props) {
     }
   }
 
-  const handleUploadAvatar = async (file: RcFile) => {
-    const options = {
-      maxSizeMB: 0.5, // максимум 500KB
-      maxWidthOrHeight: 300, // зменшує до 300x300
-      useWebWorker: true,
+  const handleUploadAvatar = (file: RcFile) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatar(reader.result as string);
     };
-  
-    try {
-      const compressedFile = await imageCompression(file, options);
-      const base64 = await imageCompression.getDataUrlFromFile(compressedFile);
-      setAvatar(base64);
-    } catch (err) {
-      console.error('❌ Image compression failed:', err);
-    }
-  
-    return false;
-  
-  }
+    reader.readAsDataURL(file);
+    return false; // блокувати автозавантаження Upload компонента
+  };
 
   return (
     <Form name='registration' onFinish={handleRegisterForm} autoComplete='off'>

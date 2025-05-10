@@ -15,13 +15,13 @@ export const registerUser = createAsyncThunk<User,
       const result = await createUserWithEmailAndPassword(auth, email, password);
       const uid = result.user.uid;
 
-      const avatarRef = ref(storage, `avatars/${uid}`);
-      await uploadString(avatarRef, avatar, 'data_url');
-      const avatarUrl = await getDownloadURL(avatarRef);
+      // const avatarRef = ref(storage, `avatars/${uid}`);
+      // await uploadString(avatarRef, avatar, 'data_url');
+      // const avatarUrl = await getDownloadURL(avatarRef);
 
       console.log('user create with uid', uid)
 
-      const userData: User = { uid, email, fullName, avatar: avatarUrl };
+      const userData: User = { uid, email, fullName, avatar };
       console.log(userData)
 
       console.log('writing user to store')
