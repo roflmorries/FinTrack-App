@@ -1,9 +1,8 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from "./types";
 import { createAsyncThunk} from "@reduxjs/toolkit";
-import { auth, db, storage } from "../../../shared/config/firebase";
+import { auth, db} from "../../../shared/config/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 
 export const registerUser = createAsyncThunk<User,
   { email: string; password: string; fullName: string; avatar: string;},
@@ -14,10 +13,6 @@ export const registerUser = createAsyncThunk<User,
       console.log('creating user')
       const result = await createUserWithEmailAndPassword(auth, email, password);
       const uid = result.user.uid;
-
-      // const avatarRef = ref(storage, `avatars/${uid}`);
-      // await uploadString(avatarRef, avatar, 'data_url');
-      // const avatarUrl = await getDownloadURL(avatarRef);
 
       console.log('user create with uid', uid)
 
