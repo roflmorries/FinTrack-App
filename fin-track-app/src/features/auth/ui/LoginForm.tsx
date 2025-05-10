@@ -1,5 +1,5 @@
 import { Button, Form, Input } from "antd"
-// import GoogleLoginButton from "./GoogleLoginButton"
+import GoogleLoginButton from "./GoogleLoginButton"
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks/redux/reduxTypes"
 import { loginUser } from "../../../entities/user/model/userThunks";
 import { useNavigate } from "react-router-dom";
@@ -56,7 +56,7 @@ export default function LoginForm({}: Props) {
       </Form.Item>
       <Button type="primary" htmlType="submit">Войти</Button>
     </Form>
-    {/* <GoogleLoginButton/> */}
+    <GoogleLoginButton/>
     </>
   )
 }
