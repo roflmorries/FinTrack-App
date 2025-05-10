@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "./types";
-import { loginUser, registerUser, fetchUserData } from "./userThunks";
+import { loginUser, registerUser, fetchUserData, signInUserWithGoogle } from "./userThunks";
 
 interface UserState {
   currentUser: User | null,
@@ -52,6 +52,12 @@ const userSlice = createSlice({
 
     builder.addCase(fetchUserData.fulfilled, (state, action) => {
       state.currentUser = action.payload;
+    })
+
+    builder.addCase(signInUserWithGoogle.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+      state.isAuth = true;
+      state.isLoading = false;
     })
   }
 });

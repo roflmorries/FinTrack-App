@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { User } from "./types";
 import { createAsyncThunk} from "@reduxjs/toolkit";
 import { auth, db} from "../../../shared/config/firebase";
@@ -51,5 +51,39 @@ export const fetchUserData = createAsyncThunk<User, string>('user/fetchUserData'
   async uid => {
     const userData = await getDoc(doc(db, 'users', uid));
     return userData.data() as User;
+  }
+)
+
+export const signInUserWithGoogle = createAsyncThunk<User, void>('user/signInWithGoogle',
+    async (_, { rejectWithValue }) => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      const user = result.user;
+      const uid = user.uid;
+
+      // Перевіряємо, чи існує вже такий користувач у Firestore
+      const userRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userRef);
+
+      let userData: User;
+
+      if (!userSnap.exists()) {
+        userData = {
+          uid,
+          email: user.email || '',
+          fullName: user.displayName || '',
+          avatar: user.photoURL || '',
+        };
+        await setDoc(userRef, userData);
+      } else {
+        userData = userSnap.data() as User;
+      }
+
+      return userData;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
 )
