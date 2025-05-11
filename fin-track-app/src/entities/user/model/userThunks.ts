@@ -62,8 +62,7 @@ export const signInUserWithGoogle = createAsyncThunk<User, void>('user/signInWit
 
       const user = result.user;
       const uid = user.uid;
-
-      // Перевіряємо, чи існує вже такий користувач у Firestore
+      console.log(user)
       const userRef = doc(db, 'users', uid);
       const userSnap = await getDoc(userRef);
 
