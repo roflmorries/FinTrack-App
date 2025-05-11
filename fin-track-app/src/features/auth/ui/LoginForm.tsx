@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks/redux/
 import { loginUser } from "../../../entities/user/model/userThunks";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import ResetPasswordPage from "../../../pages/ResetPasswordPage/ResetPasswordPage";
 
 type Props = {}
 
@@ -57,6 +58,7 @@ export default function LoginForm({}: Props) {
       <Button type="primary" htmlType="submit">Войти</Button>
     </Form>
     <GoogleLoginButton/>
+    <Button onClick={() => navigate('/reset-password')}>Forget Password?</Button>
     </>
   )
 }
