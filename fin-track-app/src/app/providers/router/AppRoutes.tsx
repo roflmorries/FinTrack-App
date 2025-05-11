@@ -4,6 +4,7 @@ import PrivateRoute from "../../../shared/lib/privateRoute"
 import ApplicationPage from "../../../pages/ApplicationPage/ApplicationPage"
 import RegistrationPage from "../../../pages/RegistrationPage/RegistrationPage"
 import LoginPage from "../../../pages/LoginPage/LoginPage"
+import ResetPasswordPage from "../../../pages/ResetPasswordPage/ResetPasswordPage"
 
 export default function AppRoutes() {
   return (
@@ -11,6 +12,7 @@ export default function AppRoutes() {
       <Route path="/" element={<HomePage/>} />
       <Route path="/registration" element={<RegistrationPage/>}/>
       <Route path="/login" element={<LoginPage/>}/>
+      <Route path="/reset-password" element={<ResetPasswordPage/>}/>
 
       <Route element={<PrivateRoute/>}>
         <Route path="/dashboard" element={<ApplicationPage/>}>
