@@ -1,13 +1,28 @@
-import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
+import Dashboard from "../../widgets/Dashboard/Dashboard"
+import Sidebar from "../../widgets/Sidebar/Sidebar"
+import styled from 'styled-components'
+import { Layout, Menu, theme } from 'antd';
+
+const { Content, Sider } = Layout;
+
+const CustomLayout = styled(Layout)`
+  .ant-layout {
+    height: 100vh;
+  }
+`;
+
 
 export default function ApplicationPage() {
-
-  const user = useAppSelector(state => state.user.currentUser)
   return (
-    <>
-      <img src={user?.avatar}></img>
-      <p>{user?.fullName}</p>
-      <p>{user?.email}</p>
-    </>
+    <CustomLayout>
+      <Sider width={350} style={{ background: "#262626" }}>
+        <Sidebar/>
+      </Sider>
+      <Layout style={{ background: "#262626" }}>
+        <Content>
+          <Dashboard/>
+        </Content>
+      </Layout>
+    </CustomLayout>
   )
 }
