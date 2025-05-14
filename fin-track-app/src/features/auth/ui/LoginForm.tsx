@@ -18,8 +18,6 @@ export default function LoginForm({}: Props) {
     }
   }, [isAuth, navigate]);
 
-  console.log(isAuth);
-
   const handleLoginForm = async (values: {email: string; password: string}) => {
     try {
       await dispatch(loginUser(values))

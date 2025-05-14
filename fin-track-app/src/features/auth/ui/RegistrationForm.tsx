@@ -21,7 +21,6 @@ export default function RegistrationForm({}: Props) {
     }
   }, [isAuth, navigate])
 
-  console.log(isAuth)
 
 
   const handleRegisterForm = (values: any) => {
