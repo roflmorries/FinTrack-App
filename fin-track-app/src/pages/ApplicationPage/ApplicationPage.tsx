@@ -1,7 +1,7 @@
 import Dashboard from "../../widgets/Dashboard/Dashboard"
 import Sidebar from "../../widgets/Sidebar/Sidebar"
 import styled from 'styled-components'
-import { Layout, Menu, theme } from 'antd';
+import { Layout} from 'antd';
 
 const { Content, Sider } = Layout;
 
