@@ -16,7 +16,9 @@ export default function LoginForm({}: Props) {
     if (isAuth) {
       navigate('/dashboard')
     }
-  }, [isAuth, navigate])
+  }, [isAuth, navigate]);
+
+  console.log(isAuth);
 
   const handleLoginForm = async (values: {email: string; password: string}) => {
     try {
