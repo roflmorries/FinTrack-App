@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { registerUser } from '../../../entities/user/model/userThunks';
 import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
 import { useNavigate } from 'react-router-dom';
-import imageCompression from 'browser-image-compression';
+// import imageCompression from 'browser-image-compression';
 
 type Props = {}
 
@@ -21,6 +21,7 @@ export default function RegistrationForm({}: Props) {
     }
   }, [isAuth, navigate])
 
+  console.log(isAuth)
 
 
   const handleRegisterForm = (values: any) => {
@@ -38,7 +39,7 @@ export default function RegistrationForm({}: Props) {
       setAvatar(reader.result as string);
     };
     reader.readAsDataURL(file);
-    return false; // блокувати автозавантаження Upload компонента
+    return false;
   };
 
   return (
