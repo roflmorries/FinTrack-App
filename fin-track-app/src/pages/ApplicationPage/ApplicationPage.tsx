@@ -1,7 +1,7 @@
-import Dashboard from "../../widgets/Dashboard/Dashboard"
 import Sidebar from "../../widgets/Sidebar/Sidebar"
 import styled from 'styled-components'
 import { Layout } from 'antd';
+import { Outlet } from "react-router-dom";
 
 const { Content, Sider } = Layout;
 
@@ -20,7 +20,7 @@ export default function ApplicationPage() {
       </Sider>
       <Layout style={{ background: "#262626" }}>
         <Content>
-          <Dashboard/>
+          <Outlet/>
         </Content>
       </Layout>
     </CustomLayout>
