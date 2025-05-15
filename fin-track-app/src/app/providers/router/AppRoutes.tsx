@@ -5,6 +5,9 @@ import ApplicationPage from "../../../pages/ApplicationPage/ApplicationPage"
 import RegistrationPage from "../../../pages/RegistrationPage/RegistrationPage"
 import LoginPage from "../../../pages/LoginPage/LoginPage"
 import ResetPasswordPage from "../../../pages/ResetPasswordPage/ResetPasswordPage"
+import Dashboard from "../../../widgets/Dashboard/Dashboard"
+import TransactionPage from "../../../pages/TransactionPage/TransactionPage"
+import CategoriesPage from "../../../pages/CategoriesPage/CategoriesPage"
 
 export default function AppRoutes() {
   return (
@@ -16,7 +19,9 @@ export default function AppRoutes() {
 
       <Route element={<PrivateRoute/>}>
         <Route path="/dashboard" element={<ApplicationPage/>}>
-          {/* ...TBC */}
+          <Route index element={<Dashboard/>}/>
+          <Route path='transactions' element={<TransactionPage/>}/>
+          <Route path='categories' element={<CategoriesPage/>}/>
         </Route>
       </Route>
     </Routes>
