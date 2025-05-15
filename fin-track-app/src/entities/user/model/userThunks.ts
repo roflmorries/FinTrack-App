@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { User } from "./types";
 import { createAsyncThunk} from "@reduxjs/toolkit";
 import { auth, db} from "../../../shared/config/firebase";
@@ -52,7 +52,7 @@ export const fetchUserData = createAsyncThunk<User, string>('user/fetchUserData'
     const userData = await getDoc(doc(db, 'users', uid));
     return userData.data() as User;
   }
-)
+);
 
 export const signInUserWithGoogle = createAsyncThunk<User, void>('user/signInWithGoogle',
     async (_, { rejectWithValue }) => {
@@ -83,6 +83,16 @@ export const signInUserWithGoogle = createAsyncThunk<User, void>('user/signInWit
       return userData;
     } catch (error: any) {
       return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const userLogOut = createAsyncThunk<void, void>('user/logout',
+  async (_, {rejectWithValue}) => {
+    try {
+      await signOut(auth);
+    } catch (error: any) {
+      return rejectWithValue(error.message)
     }
   }
 )
