@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import TransactionForm from "../../features/transactions/TransactionForm"
 
 const Layout = styled.div`
   background-color: #141414;
@@ -12,6 +13,7 @@ export default function TransactionPage() {
   return (
     <Layout>
       <div>TransactionPage</div>
+      <TransactionForm/>
     </Layout>
   )
 }
