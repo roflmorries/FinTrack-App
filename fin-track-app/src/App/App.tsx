@@ -7,11 +7,13 @@ import { fetchUserData } from '../entities/user/model/userThunks';
 import { auth } from '../shared/config/firebase';
 import { useEffect } from 'react';
 import Loader from '../widgets/Loader/Loader';
+import { fetchTransactions } from '../entities/transactions/model/transactionThunk';
 
 function App() {
 
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(state => state.user.isLoading)
+  const user = useAppSelector(state => state.user.currentUser)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -19,9 +21,16 @@ function App() {
         dispatch(fetchUserData(firebaseUser.uid));
       }
     });
-
     return () => unsubscribe();
   }, [dispatch]);
+
+
+  useEffect(() => {
+    if (user?.uid) {
+      dispatch(fetchTransactions(user.uid));
+    }
+  }, [user])
+
 
   if(isLoading) return <Loader/>
   return (
