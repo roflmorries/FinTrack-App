@@ -50,6 +50,7 @@ export default function Sidebar({ className }: SidebarProps) {
       </StyledNav>
       <div>
         <Button onClick={handleUserLogOut}>LogOut</Button>
+        
       </div>
     </div>
   )
