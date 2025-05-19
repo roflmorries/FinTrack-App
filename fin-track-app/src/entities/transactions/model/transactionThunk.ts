@@ -8,9 +8,13 @@ export const fetchTransactions = createAsyncThunk<Transaction[], string>('transa
   }
 );
 
-export const saveTransactionsToStorage = createAsyncThunk<void, {userId: string, transactions: Transaction[]}>(
-  'transactions/saveAll',
-  async ({userId, transactions}) => {
-    localStorage.setItem(`transactions_${userId}`, JSON.stringify(transactions));
-  }
-)
+// export const saveTransactionsToStorage = createAsyncThunk<void, {userId: string, transactions: Transaction[]}>(
+//   'transactions/saveAll',
+//   async ({userId, transactions}) => {
+//     localStorage.setItem(`transactions_${userId}`, JSON.stringify(transactions));
+//   }
+// );
+
+export function saveTransactionsToStorageMock({ userId, transactions }: { userId: string, transactions: Transaction[] }) {
+  localStorage.setItem(`transactions_${userId}`, JSON.stringify(transactions));
+}
