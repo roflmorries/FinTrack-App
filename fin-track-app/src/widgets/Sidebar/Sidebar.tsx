@@ -1,8 +1,10 @@
-import { Avatar, Button } from "antd"
+import { Avatar, Button, Modal } from "antd"
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { userLogOut } from "../../entities/user/model/userThunks";
+import TransactionForm from "../../features/transactions/TransactionForm";
+import { useState } from "react";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -18,12 +20,28 @@ const StyledNav = styled.nav`
   }
 `
 
+const StyledButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  gap: 20px;
+
+  .ant-btn {
+    background: none;
+    border: none;
+    color: white;
+    box-shadow: none;
+  }
+`
+
 type SidebarProps = {
   className?: string,
 }
 
 export default function Sidebar({ className }: SidebarProps) {
   const dispatch = useAppDispatch();
+  const [modal1Open, setModal1Open] = useState(false);
+  const [modal2Open, setModal2Open] = useState(false);
 
   const handleUserLogOut = () => {
     dispatch(userLogOut());
@@ -48,10 +66,19 @@ export default function Sidebar({ className }: SidebarProps) {
           Categories
         </NavLink>
       </StyledNav>
-      <div>
+      <StyledButtonContainer>
+        <Button onClick={() => setModal2Open(true)}>Add Transaction</Button>
         <Button onClick={handleUserLogOut}>LogOut</Button>
-        
-      </div>
+      </StyledButtonContainer>
+      <Modal
+        title="Vertically centered modal dialog"
+        centered
+        open={modal2Open}
+        footer={null}
+        onCancel={() => setModal2Open(false)}
+      >
+        <TransactionForm onSave={() => setModal2Open(false)}/>
+      </Modal>
     </div>
   )
 }
