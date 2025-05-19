@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { v4 as uuidv4 } from 'uuid';
 import { addTransaction, updateTransaction } from "../../entities/transactions/model/transactionSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
 // import { saveTransactionsToStorage } from "../../entities/transactions/model/transactionThunk";
 

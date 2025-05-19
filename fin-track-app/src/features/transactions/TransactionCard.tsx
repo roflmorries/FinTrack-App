@@ -1,4 +1,3 @@
-import React from 'react'
 import { Transaction } from '../../entities/transactions/model/types'
 import styled from 'styled-components';
 import { Button } from 'antd';

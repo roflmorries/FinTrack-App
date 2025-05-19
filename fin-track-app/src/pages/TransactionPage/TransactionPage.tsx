@@ -18,7 +18,7 @@ const Layout = styled.div`
 export default function TransactionPage() {
   const data = useAppSelector(SelectAllTransactions)
   const dispatch = useAppDispatch();
-  const [isAddFormShown, setIsAddFormShown] = useState(false);
+  // const [isAddFormShown, setIsAddFormShown] = useState(false);
   const [isEditModalShown, setIsEditModalShown] = useState(false);
   const [editTransactionId, setEditTransactionId] = useState<string | null>(null);
 
