@@ -62,7 +62,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
 
   const handleTransactionEdit = (values: any) => {
     if (!transactionId) return;
-    console.log(values)
+    // console.log(values)
 
     const updateTransactione = {
       id: transactionId,
