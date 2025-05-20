@@ -21,9 +21,8 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
 
   const userId = useAppSelector(state => state.user.currentUser?.uid)
   const dispatch = useAppDispatch();
-  const currentTransaction = useAppSelector(state =>
-    transactionId ? SelectTransactionById(state, transactionId) : undefined
-  );  // const transactions = useAppSelector(state => state.transaction.entities)
+  const currentTransaction = useAppSelector(state => transactionId ? SelectTransactionById(state, transactionId) : undefined);
+  // const transactions = useAppSelector(state => state.transaction.entities)
   // const [initialDate, setDate] = useState('');
   const [form] = Form.useForm();
 
