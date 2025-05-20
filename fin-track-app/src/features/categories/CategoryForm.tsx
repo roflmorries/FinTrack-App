@@ -2,6 +2,8 @@ import { Button, Form, Input } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { v4 as uuidv4 } from 'uuid'
 import { addCategory, updateCategory } from '../../entities/categories/model/categorySlice';
+import { useEffect } from 'react';
+import { selectCategoryById } from '../../entities/categories/model/categorySelectors';
 
 type CategoryFormProps = {
   onSave: () => void;
@@ -11,7 +13,19 @@ type CategoryFormProps = {
 export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
-  const userId = useAppSelector(state => state.user.currentUser?.uid)
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const currentCategory = useAppSelector(state => categoryId ? selectCategoryById(state, categoryId) : undefined);
+
+
+  useEffect(() => {
+    if (categoryId && currentCategory) {
+      form.setFieldsValue({
+        name: currentCategory.name
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [categoryId, currentCategory, form]);
 
   const handleSaveCategory = (values: {name: string}) => {
     if (!userId) return;
