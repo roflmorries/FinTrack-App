@@ -8,6 +8,7 @@ import { auth } from '../shared/config/firebase';
 import { useEffect } from 'react';
 import Loader from '../widgets/Loader/Loader';
 import { fetchTransactions } from '../entities/transactions/model/transactionThunk';
+import { fetchCategories } from '../entities/categories/model/categoryThunk';
 
 function App() {
 
@@ -28,11 +29,12 @@ function App() {
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchTransactions(user.uid));
+      dispatch(fetchCategories(user.uid));
     }
   }, [user])
 
 
-  if(isLoading) return <Loader/>
+  if (isLoading) return <Loader/>
   return (
     <BrowserRouter>
       <AppRoutes/>
