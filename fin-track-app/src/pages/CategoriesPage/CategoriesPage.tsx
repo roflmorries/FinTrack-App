@@ -45,6 +45,7 @@ export default function CategoriesPage() {
       open={isEditModalShown}
       onCancel={handleCloseModal}
       destroyOnClose // mb delete
+      footer={null}
       >
         <CategoryForm categoryId={editCategoryId ?? undefined} onSave={handleCloseModal}/>
       </Modal>
