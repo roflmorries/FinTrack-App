@@ -17,7 +17,6 @@ interface TransactionFormProps {
 }
 
 export default function TransactionForm({ onSave, transactionId }: TransactionFormProps) {
-  // if (!transactionId) return undefined;
 
   const userId = useAppSelector(state => state.user.currentUser?.uid)
   const dispatch = useAppDispatch();
