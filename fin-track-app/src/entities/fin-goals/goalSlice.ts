@@ -4,10 +4,13 @@ import { Goal } from "./types";
 
 export const goalAdapter = createEntityAdapter<Goal>();
 
-const initialState = goalAdapter.getInitialState();
+const initialState = goalAdapter.getInitialState({
+    loading: false,
+    error: null as string | null
+});
 
 const goalSlice = createSlice({
-  name: 'goals',
+  name: 'goal',
   initialState: initialState,
   reducers: {
     addGoal: (state, action: PayloadAction<Goal>) => {
