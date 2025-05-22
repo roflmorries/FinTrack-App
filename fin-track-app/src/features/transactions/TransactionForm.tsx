@@ -8,16 +8,13 @@ import { SelectTransactionById } from "../../entities/transactions/model/transac
 // import { saveTransactionsToStorage } from "../../entities/transactions/model/transactionThunk";
 
 
-const categories = ['Salary', 'Food', 'Transport', 'Entertainment', 'Other'];
-
-
 interface TransactionFormProps {
   onSave: () => void;
   transactionId?: string;
 }
 
 export default function TransactionForm({ onSave, transactionId }: TransactionFormProps) {
-
+  const categories = useAppSelector(state => state.category.entities ? Object.values(state.category.entities) : []);
   const userId = useAppSelector(state => state.user.currentUser?.uid)
   const dispatch = useAppDispatch();
   const currentTransaction = useAppSelector(state => transactionId ? SelectTransactionById(state, transactionId) : undefined);
@@ -113,7 +110,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       label='Category'
       rules={[{ required: true }]}
       >
-        <Select options={categories.map(category => ({ value: category, label: category }))} />
+        <Select options={categories.map(category => ({ value: category.name, label: category.name }))} />
       </Form.Item>
 
       <Form.Item
