@@ -67,6 +67,9 @@ export default function Sidebar({ className }: SidebarProps) {
         <NavLink to='/dashboard/categories'>
           Categories
         </NavLink>
+        <NavLink to='/dashboard/goals'>
+          Goals
+        </NavLink>
       </StyledNav>
       <StyledButtonContainer>
         <Button onClick={() => setModal2Open(true)}>Add Transaction</Button>
