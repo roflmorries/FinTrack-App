@@ -8,6 +8,7 @@ import ResetPasswordPage from "../../../pages/ResetPasswordPage/ResetPasswordPag
 import Dashboard from "../../../widgets/Dashboard/Dashboard"
 import TransactionPage from "../../../pages/TransactionPage/TransactionPage"
 import CategoriesPage from "../../../pages/CategoriesPage/CategoriesPage"
+import GoalsPage from "../../../pages/GoalsPage/GoalsPage"
 
 export default function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function AppRoutes() {
           <Route index element={<Dashboard/>}/>
           <Route path='transactions' element={<TransactionPage/>}/>
           <Route path='categories' element={<CategoriesPage/>}/>
+          <Route path='goals' element={<GoalsPage/>}/>
         </Route>
       </Route>
     </Routes>
