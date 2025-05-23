@@ -19,7 +19,7 @@ const Layout = styled.div`
 `
 
 export default function GoalsPage({}: Props) {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const data = useAppSelector(selectAllGoals)
   const [isEditModalShown, setIsEditModalShown] = useState(false);
   const [editGoalId, setEditGoalId] = useState<string | null>(null);
