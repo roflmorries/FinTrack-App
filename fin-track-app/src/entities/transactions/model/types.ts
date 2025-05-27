@@ -6,5 +6,5 @@ export interface Transaction {
   category: string;
   date: string;
   comment?: string;
-  goleId?: string;
+  goalId?: string;
 }

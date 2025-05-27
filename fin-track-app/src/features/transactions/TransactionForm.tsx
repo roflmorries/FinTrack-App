@@ -137,8 +137,8 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
 
       {selectedCategory === 'Goals' && (
       <Form.Item
-      name='goleId'
-      label='Gole'
+      name='goalId'
+      label='Goal'
       >
         <Select
         placeholder='Выберите цель'
