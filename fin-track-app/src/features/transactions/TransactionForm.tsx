@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { v4 as uuidv4 } from 'uuid';
 import { addTransaction, updateTransaction } from "../../entities/transactions/model/transactionSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
 // import { saveTransactionsToStorage } from "../../entities/transactions/model/transactionThunk";
 
@@ -21,9 +21,12 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   // const transactions = useAppSelector(state => state.transaction.entities)
   // const [initialDate, setDate] = useState('');
   const [form] = Form.useForm();
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const goals = useAppSelector(state => state.goal.entities ? Object.values(state.goal.entities) : []);
 
   useEffect(() => {
     if (transactionId && currentTransaction) {
+      setSelectedCategory(currentTransaction.category);
       form.setFieldsValue({
         type: currentTransaction.type,
         amount: currentTransaction.amount,
@@ -110,7 +113,10 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       label='Category'
       rules={[{ required: true }]}
       >
-        <Select options={categories.map(category => ({ value: category.name, label: category.name }))} />
+        <Select
+        options={categories.map(category => ({ value: category.name, label: category.name }))}
+        onChange={value => setSelectedCategory(value)}
+        />
       </Form.Item>
 
       <Form.Item
@@ -128,6 +134,19 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       >
         <Input/>
       </Form.Item>
+
+      {selectedCategory === 'Goals' && (
+      <Form.Item
+      name='goleId'
+      label='Gole'
+      >
+        <Select
+        placeholder='Выберите цель'
+        options={goals.map(goal => ({value: goal.id, label: goal.name}))}
+        allowClear
+        />
+      </Form.Item>
+      )}
 
       <Button htmlType="submit" type="primary">Save</Button>
 

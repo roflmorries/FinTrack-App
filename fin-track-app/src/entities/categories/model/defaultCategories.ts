@@ -5,4 +5,5 @@ export const defaultCategories: Omit<Category, "id" | "userId">[] = [
   {name: 'Food'},
   {name: 'Transport'},
   {name: 'Entertainment'},
+  {name: 'Goals'}
 ]
