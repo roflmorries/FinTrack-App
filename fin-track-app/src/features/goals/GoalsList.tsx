@@ -1,4 +1,3 @@
-import React from 'react'
 import { Goal } from '../../entities/fin-goals/types'
 import GoalCard from './GoalCard'
 
