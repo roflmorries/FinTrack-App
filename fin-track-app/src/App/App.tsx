@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import Loader from '../widgets/Loader/Loader';
 import { fetchTransactions } from '../entities/transactions/model/transactionThunk';
 import { fetchCategories } from '../entities/categories/model/categoryThunk';
+import { fetchGoals } from '../entities/fin-goals/goalThunk';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
     if (user?.uid) {
       dispatch(fetchTransactions(user.uid));
       dispatch(fetchCategories(user.uid));
+      dispatch(fetchGoals(user.uid));
     }
   }, [user])
 
