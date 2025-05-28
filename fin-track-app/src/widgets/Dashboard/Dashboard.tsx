@@ -13,6 +13,13 @@ const Layout = styled.div`
   * {
     color: white
   }
+  .progress_block {
+    width: 250px;
+    height: 200px;
+    background-color: #262626;
+    border-radius: 17px;
+    margin-left: 50px;
+  }
 `
 
 export default function Dashboard() {
@@ -25,7 +32,7 @@ export default function Dashboard() {
       const progress = useAppSelector(state => selectGoalProgress(state, goal.id));
       const percent = Math.min((progress / goal.amount) * 100, 100);
       return (
-        <div key={goal.id}>
+        <div key={goal.id} className="progress_block">
           <p>{goal.name}</p>
           <Progress percent={percent} />
           <p>{progress} / {goal.amount}</p>
