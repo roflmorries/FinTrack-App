@@ -3,6 +3,7 @@ import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
 import { selectGoalProgress } from "../../entities/fin-goals/goalProgressSelector"
 import { Progress } from "antd";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
+import BalanceWidget from "./BalanceWidget/BalanceWidget";
 
 const Layout = styled.div`
   background-color: #141414;
@@ -39,7 +40,7 @@ export default function Dashboard() {
         </div>
       );
     })}
-      
+      <BalanceWidget/>
     </Layout>
   )
 }
