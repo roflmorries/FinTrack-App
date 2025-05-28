@@ -16,10 +16,6 @@ export default function BalanceChartWidget({}: Props) {
     <StyledContainer>
       <ResponsiveContainer>
         <LineChart data={data}>
-          {/* <CartesianGrid stroke="#444" />
-          <XAxis dataKey="date" tick={{ fill: "#fff" }} />
-          <YAxis tick={{ fill: "#fff" }} />
-          <Tooltip /> */}
           <Line type="monotone" dataKey="balance" stroke="#a100ff" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
