@@ -1,15 +1,17 @@
 import styled from 'styled-components'
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes'
 import { selectBalance, selectFreeBalance, selectGoalsReserved } from '../../../entities/transactions/model/selectBalance'
+import BalanceChartWidget from '../BalanceChartWidget/BalanceChartWidget'
 
 type Props = {}
 
 const StyledBalanceWidget = styled.div`
-    width: 250px;
+    width: 400px;
     height: 200px;
     background-color: #262626;
     border-radius: 17px;
     margin-left: 50px;
+    text-align: start;
 `
 
 export default function BalanceWidget({}: Props) {
@@ -21,6 +23,7 @@ export default function BalanceWidget({}: Props) {
       <p>Balance: {total}</p>
       <p>Goals: {goals}</p>
       <p>Free: {free}</p>
+      <BalanceChartWidget/>
     </StyledBalanceWidget>
   )
 }

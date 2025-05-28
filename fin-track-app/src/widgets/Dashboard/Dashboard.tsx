@@ -29,6 +29,7 @@ export default function Dashboard() {
   return (
     <Layout>
       <p>DashboardLALALLALALA</p>
+      <BalanceWidget/>
       {goals.map(goal => {
       const progress = useAppSelector(state => selectGoalProgress(state, goal.id));
       const percent = Math.min((progress / goal.amount) * 100, 100);
@@ -40,7 +41,6 @@ export default function Dashboard() {
         </div>
       );
     })}
-      <BalanceWidget/>
     </Layout>
   )
 }
