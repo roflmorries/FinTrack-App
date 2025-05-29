@@ -1,9 +1,8 @@
 import styled from "styled-components"
 import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
-import { selectGoalProgress } from "../../entities/fin-goals/goalProgressSelector"
 import { Progress } from "antd";
-import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import BalanceWidget from "./BalanceWidget/BalanceWidget";
+import { selectActiveGoalsWithProgress } from "../../entities/fin-goals/goalWithProgressSelector";
 
 const Layout = styled.div`
   background-color: #141414;
@@ -24,20 +23,19 @@ const Layout = styled.div`
 `
 
 export default function Dashboard() {
-  const goals = useAppSelector(selectAllGoals);
+  const goals = useAppSelector(selectActiveGoalsWithProgress);
 
   return (
     <Layout>
       <p>DashboardLALALLALALA</p>
       <BalanceWidget/>
       {goals.map(goal => {
-      const progress = useAppSelector(state => selectGoalProgress(state, goal.id));
-      const percent = Math.min((progress / goal.amount) * 100, 100);
+      const percent = Math.min((goal.progress / goal.amount) * 100, 100);
       return (
         <div key={goal.id} className="progress_block">
           <p>{goal.name}</p>
           <Progress percent={percent} />
-          <p>{progress} / {goal.amount}</p>
+          <p>{goal.progress} / {goal.amount}</p>
         </div>
       );
     })}
