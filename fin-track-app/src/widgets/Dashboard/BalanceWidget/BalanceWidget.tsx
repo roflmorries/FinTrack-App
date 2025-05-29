@@ -12,6 +12,11 @@ const StyledBalanceWidget = styled.div`
     border-radius: 17px;
     margin-left: 50px;
     text-align: start;
+    padding: 15px;
+    .info__container {
+      max-height: 40%;
+      line-height: 8px;
+    }
 `
 
 export default function BalanceWidget({}: Props) {
@@ -20,9 +25,11 @@ export default function BalanceWidget({}: Props) {
   const free = useAppSelector(selectFreeBalance)
   return (
     <StyledBalanceWidget>
-      <p>Balance: {total}</p>
-      <p>Goals: {goals}</p>
-      <p>Free: {free}</p>
+      <div className='info__container'>
+        <p>Balance: {total}</p>
+        <p>Goals: {goals}</p>
+        <p>Free: {free}</p>
+      </div>
       <BalanceChartWidget/>
     </StyledBalanceWidget>
   )
