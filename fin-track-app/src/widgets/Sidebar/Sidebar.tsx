@@ -72,7 +72,7 @@ export default function Sidebar({ className }: SidebarProps) {
         </NavLink>
       </StyledNav>
       <StyledButtonContainer>
-        <Button onClick={() => setModal2Open(true)}>Add Transaction</Button>
+        <Button onClick={() => setModal2Open(true)}>+ Add Transaction</Button>
         <Button onClick={handleUserLogOut}>LogOut</Button>
       </StyledButtonContainer>
       <Modal
