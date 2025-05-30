@@ -38,7 +38,7 @@ export default function TransactionPage() {
   return (
     <Layout>
       <div>TransactionPage</div>
-      <TransactionsList items={data} onEdit={handleTransactionEdit} onDelete={handleTransactionDelete}/>
+      <TransactionsList onEdit={handleTransactionEdit} onDelete={handleTransactionDelete}/>
       <Modal
       title='edit form'
       open={isEditModalShown}
