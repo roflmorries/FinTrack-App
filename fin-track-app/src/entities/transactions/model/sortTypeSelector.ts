@@ -5,7 +5,7 @@ import { SelectAllTransactions } from "./transactionsSelectors";
 export const selectSortedTransactions = createSelector(
   [
     SelectAllTransactions,
-    (_: any, sortType: "none" | "date" | "category" | "type") => sortType
+    (_: any, sortType: "date" | "category" | "type" | undefined) => sortType
   ],
   (transactions, sortType) => {
     let sorted = [...transactions];
