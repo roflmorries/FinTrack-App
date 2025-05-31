@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import TransactionForm from "../../features/transactions/TransactionForm"
-import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
-import { SelectAllTransactions } from "../../entities/transactions/model/transactionsSelectors"
+import { useAppDispatch } from "../../shared/lib/hooks/redux/reduxTypes"
+// import { SelectAllTransactions } from "../../entities/transactions/model/transactionsSelectors"
 import TransactionsList from "../../features/transactions/TransactionsList"
 import { Modal } from "antd"
 import { useState } from "react"
@@ -16,7 +16,7 @@ const Layout = styled.div`
 `
 
 export default function TransactionPage() {
-  const data = useAppSelector(SelectAllTransactions)
+  // const data = useAppSelector(SelectAllTransactions)
   const dispatch = useAppDispatch();
   // const [isAddFormShown, setIsAddFormShown] = useState(false);
   const [isEditModalShown, setIsEditModalShown] = useState(false);

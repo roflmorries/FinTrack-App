@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { Transaction } from '../../entities/transactions/model/types';
 import TransactionCard from './TransactionCard';
-import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { selectSortedTransactions } from '../../entities/transactions/model/sortTypeSelector';
 import { Select } from 'antd';
 import { useSelector } from 'react-redux';
