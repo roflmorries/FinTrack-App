@@ -7,11 +7,13 @@ type CategoryCardProps = Category & {
   onDelete: (id: string) => void;
 }
 
-const StyledCard = styled.div`
+
+const StyledCard = styled.div<{ $color: string }>`
   display: flex;
   justify-content: center;
   gap: 30px;
   align-items: center;
+  background: ${({ $color }) => $color};
   p {
     color: white;
   }
@@ -24,7 +26,7 @@ const StyledCard = styled.div`
 
 export default function CategoryCard({ onEdit, onDelete, ...category }: CategoryCardProps) {
   return (
-    <StyledCard>
+    <StyledCard $color={category.color}>
     <p>Category name: {category.name}</p>
     <div className='buttons__container'>
       <Button type='primary' onClick={() => onEdit(category.id)}>Edit</Button>
