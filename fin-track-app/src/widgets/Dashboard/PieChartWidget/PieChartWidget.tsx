@@ -27,9 +27,7 @@ export default function PieChartWidget() {
         cx="50%"
         cy="50%"
         innerRadius={60}
-        outerRadius={80}
-        // fill="#8884d8"
-        paddingAngle={1}
+        outerRadius={90}
         stroke='none'
 
         >
@@ -37,7 +35,21 @@ export default function PieChartWidget() {
             <Cell key={`cell-${index}`} fill={entry.color}/>
           ))}
         </Pie>
-        <Tooltip/>
+        <text
+            x="50%"
+            y="43%"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#fff"
+            fontSize={18}
+            fontWeight={500}
+          >
+            Categories
+        </text>
+        <Tooltip
+        formatter={(value) => [`${value}`, 'Сумма']}
+        contentStyle={{ background: "#262626", color: "#fff" }}
+        />
         <Legend/>
       </PieChart>
     </ResponsiveContainer>
