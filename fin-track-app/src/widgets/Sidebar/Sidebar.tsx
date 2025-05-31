@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { userLogOut } from "../../entities/user/model/userThunks";
 import TransactionForm from "../../features/transactions/TransactionForm";
 import { useState } from "react";
-import { selectBalance } from "../../entities/transactions/model/selectBalance";
+import { selectBalance, selectFreeBalance } from "../../entities/transactions/model/selectBalance";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -44,6 +44,7 @@ export default function Sidebar({ className }: SidebarProps) {
   // const [modal1Open, setModal1Open] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
   const balance = useAppSelector(selectBalance);
+  const freeBalance = useAppSelector(selectFreeBalance)
 
   const handleUserLogOut = () => {
     dispatch(userLogOut());
@@ -55,7 +56,7 @@ export default function Sidebar({ className }: SidebarProps) {
       <div>
          <Avatar size={92} icon={<img src={user?.avatar}></img>} />
          <p>{user?.fullName}</p>
-         <p>Balance: ${balance}</p>
+         <p>Balance: ${freeBalance}</p>
       </div>
       <StyledNav className="sidebar__navigation">
         <NavLink to='/dashboard' end>
