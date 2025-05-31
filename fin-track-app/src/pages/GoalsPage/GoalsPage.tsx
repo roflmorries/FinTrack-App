@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/red
 import GoalsList from "../../features/goals/GoalsList";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import { deleteGoal } from "../../entities/fin-goals/goalSlice";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 
 type Props = {}
 
@@ -21,6 +21,7 @@ export default function GoalsPage({}: Props) {
   const dispatch = useAppDispatch();
   const data = useAppSelector(selectAllGoals)
   const [isEditModalShown, setIsEditModalShown] = useState(false);
+  const [isNewModalShown, setIsNewModalShown] = useState(false);
   const [editGoalId, setEditGoalId] = useState<string | null>(null);
 
   const handleGoalEdit = (goalId: string) => {
@@ -34,12 +35,22 @@ export default function GoalsPage({}: Props) {
 
   const handleCloseModal = () => {
     setIsEditModalShown(false)
+    setIsNewModalShown(false)
   }
 
   return (
     <Layout>
       <div>GoalsPage</div>
-      <GoalForm onSave={handleCloseModal}/>
+      <Button type="primary" onClick={() => setIsNewModalShown(true)}>Create new Goal</Button>
+      <Modal
+      title='new form'
+      open={isNewModalShown}
+      onCancel={handleCloseModal}
+      destroyOnClose // mb delete
+      footer={null}
+      >
+        <GoalForm onSave={handleCloseModal}/>
+      </Modal>
       <GoalsList items={data} onEdit={handleGoalEdit} onDelete={handleGoalDelete}/>
 
       <Modal
