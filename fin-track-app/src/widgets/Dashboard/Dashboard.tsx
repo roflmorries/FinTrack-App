@@ -3,6 +3,7 @@ import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
 import { Progress } from "antd";
 import BalanceWidget from "./BalanceWidget/BalanceWidget";
 import { selectActiveGoalsWithProgress } from "../../entities/fin-goals/goalWithProgressSelector";
+import PieChartWidget from "./PieChartWidget/PieChartWidget";
 
 const Layout = styled.div`
   background-color: #141414;
@@ -29,6 +30,7 @@ export default function Dashboard() {
     <Layout>
       <p>DashboardLALALLALALA</p>
       <BalanceWidget/>
+      <PieChartWidget/>
       {goals.map(goal => {
       const percent = Math.min((goal.progress / goal.amount) * 100, 100);
       return (
