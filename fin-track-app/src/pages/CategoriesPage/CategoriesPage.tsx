@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/red
 import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
 import { useState } from "react";
 import CategoriesList from "../../features/categories/CategoriesList";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import CategoryForm from "../../features/categories/CategoryForm";
 import { deleteCategory } from "../../entities/categories/model/categorySlice";
 
@@ -20,6 +20,7 @@ export default function CategoriesPage() {
   const dispatch = useAppDispatch();
   // const [isAddFormShown, setIsAddFormShown] = useState(false);
   const [isEditModalShown, setIsEditModalShown] = useState(false);
+  const [isNewModalShown, setIsNewModalShown] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
 
   const handleTransactionEdit = (categoryId: string) => {
@@ -33,12 +34,21 @@ export default function CategoriesPage() {
 
   const handleCloseModal = () => {
     setIsEditModalShown(false)
+    setIsNewModalShown(false)
   }
 
   return (
     <Layout>
       <div>TransactionPage</div>
-      <CategoryForm onSave={handleCloseModal}/>
+      <Button type="primary" onClick={() => setIsNewModalShown(true)}>Create new category</Button>
+      <Modal
+      open={isNewModalShown}
+      onCancel={handleCloseModal}
+      destroyOnClose // mb delete
+      footer={null}
+      >
+        <CategoryForm onSave={handleCloseModal}/>
+      </Modal>
       <CategoriesList items={data} onEdit={handleTransactionEdit} onDelete={handleTransactionDelete}/>
       <Modal
       title='edit form'
