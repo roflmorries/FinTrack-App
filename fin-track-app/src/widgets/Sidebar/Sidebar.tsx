@@ -71,6 +71,9 @@ export default function Sidebar({ className }: SidebarProps) {
         <NavLink to='/dashboard/goals'>
           Goals
         </NavLink>
+        <NavLink to='/dashboard/ai-assistant'>
+          Ai Assistant
+        </NavLink>
       </StyledNav>
       <StyledButtonContainer>
         <Button onClick={() => setModal2Open(true)}>+ Add Transaction</Button>
