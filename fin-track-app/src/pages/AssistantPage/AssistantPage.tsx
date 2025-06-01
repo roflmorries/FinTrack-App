@@ -1,0 +1,26 @@
+import { lazy, Suspense } from "react";
+import styled from "styled-components";
+const AiAssistantChat = lazy(() => import ("../../features/ai-assistant/AiAssistantChat"))
+
+
+const Layout = styled.div`
+  background-color: #141414;
+  height: 96%;
+  border-radius: 24px;
+  padding: 1px;
+  margin: 20px;
+  p {
+    color: white
+  }
+`;
+
+export default function AssistantPage() {
+  return (
+    <Layout>
+      <p>AI</p>
+      <Suspense fallback={<div>Loading...</div>}>
+        <AiAssistantChat/>
+      </Suspense>
+    </Layout>
+  )
+}
