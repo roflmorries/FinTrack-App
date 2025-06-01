@@ -9,6 +9,7 @@ import Dashboard from "../../../widgets/Dashboard/Dashboard"
 import TransactionPage from "../../../pages/TransactionPage/TransactionPage"
 import CategoriesPage from "../../../pages/CategoriesPage/CategoriesPage"
 import GoalsPage from "../../../pages/GoalsPage/GoalsPage"
+import AssistantPage from "../../../pages/AssistantPage/AssistantPage"
 
 export default function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
           <Route path='transactions' element={<TransactionPage/>}/>
           <Route path='categories' element={<CategoriesPage/>}/>
           <Route path='goals' element={<GoalsPage/>}/>
+          <Route path='ai-assistant' element={<AssistantPage/>}/>
         </Route>
       </Route>
     </Routes>
