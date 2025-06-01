@@ -4,6 +4,7 @@ import { SelectAllTransactions } from '../../entities/transactions/model/transac
 import { Input, Spin, Button } from 'antd';
 import { askAssistant } from '../../shared/api/aiAssistant';
 import styled from 'styled-components';
+import { selectBalance, selectBalanceHistory, selectFreeBalance, selectGoalsReserved } from '../../entities/transactions/model/selectBalance';
 
 const StyledContainer = styled.div`
   width: 90%;
@@ -51,7 +52,7 @@ const MessageRow = styled.div<{ isUser: boolean }>`
   margin-bottom: 8px;
 `;
 
-const MessageBubble = styled.span<{ isUser: boolean }>`
+const MessageBubble = styled.div<{ isUser: boolean }>`
   background: ${props => (props.isUser ? '#0057b8' : '#222')};
   color: #fff;
   padding: 10px 16px;
@@ -78,7 +79,13 @@ export default function AiAssistantChat() {
   const [messages, setMessage] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+
   const transactions = useAppSelector(SelectAllTransactions);
+  const balance = useAppSelector(selectBalance);
+  const freeBalance = useAppSelector(selectFreeBalance)
+  const balanceGoalReserved = useAppSelector(selectGoalsReserved)
+  const balanceHistory = useAppSelector(selectBalanceHistory)
+  const user = useAppSelector(state => state.user.currentUser?.fullName) || ''
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -88,7 +95,9 @@ export default function AiAssistantChat() {
     setLoading(true);
 
     try {
-      const aiReply = await askAssistant(input, transactions)
+      const aiReply = await askAssistant(
+        input, transactions, balance, freeBalance, balanceGoalReserved, balanceHistory, user
+      )
       setMessage((prev: Message[]) => [...prev, { role: "assistant", content: aiReply || "AI не ответил" }]);
     } catch (error: any) {
         if (error?.response?.status === 429) {
