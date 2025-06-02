@@ -5,7 +5,9 @@ import styled from "styled-components";
 import { userLogOut } from "../../entities/user/model/userThunks";
 import TransactionForm from "../../features/transactions/TransactionForm";
 import { useState } from "react";
-import { selectBalance, selectFreeBalance } from "../../entities/transactions/model/selectBalance";
+import { selectFreeBalance } from "../../entities/transactions/model/selectBalance";
+import { exportTransactionsToCSV, exportTransactionsToPDF } from "../../shared/lib/export/exportTransactions";
+import { SelectAllTransactions } from "../../entities/transactions/model/transactionsSelectors";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -43,8 +45,9 @@ export default function Sidebar({ className }: SidebarProps) {
   const dispatch = useAppDispatch();
   // const [modal1Open, setModal1Open] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
-  const balance = useAppSelector(selectBalance);
+  // const balance = useAppSelector(selectBalance);
   const freeBalance = useAppSelector(selectFreeBalance)
+  const transactions = useAppSelector(SelectAllTransactions)
 
   const handleUserLogOut = () => {
     dispatch(userLogOut());
@@ -76,6 +79,8 @@ export default function Sidebar({ className }: SidebarProps) {
         </NavLink>
       </StyledNav>
       <StyledButtonContainer>
+        <Button onClick={() => exportTransactionsToCSV(transactions)}>Export transactions to CSV</Button>
+        <Button onClick={() => exportTransactionsToPDF(transactions)}>Export transactions to PDF</Button>
         <Button onClick={() => setModal2Open(true)}>+ Add Transaction</Button>
         <Button onClick={handleUserLogOut}>LogOut</Button>
       </StyledButtonContainer>
