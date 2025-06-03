@@ -1,4 +1,4 @@
-import { Avatar, Button, Modal } from "antd"
+import { Avatar, Button, Modal, Select } from "antd"
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +8,8 @@ import { useState } from "react";
 import { selectFreeBalance } from "../../entities/transactions/model/selectBalance";
 import { exportTransactionsToCSV, exportTransactionsToPDF } from "../../shared/lib/export/exportTransactions";
 import { SelectAllTransactions } from "../../entities/transactions/model/transactionsSelectors";
+import { useTranslation } from 'react-i18next';
+
 
 const StyledNav = styled.nav`
   display: flex;
@@ -48,9 +50,16 @@ export default function Sidebar({ className }: SidebarProps) {
   // const balance = useAppSelector(selectBalance);
   const freeBalance = useAppSelector(selectFreeBalance)
   const transactions = useAppSelector(SelectAllTransactions)
+  const { i18n } = useTranslation();
+  const { t } = useTranslation();
+
 
   const handleUserLogOut = () => {
     dispatch(userLogOut());
+  }
+
+  const handleChangeLanguage = (values: string) => {
+    i18n.changeLanguage(values)
   }
 
   const user = useAppSelector(state => state.user.currentUser);
@@ -61,9 +70,19 @@ export default function Sidebar({ className }: SidebarProps) {
          <p>{user?.fullName}</p>
          <p>Balance: ${freeBalance}</p>
       </div>
+      <Select
+      defaultValue="en"
+      style={{ width: 120 }}
+      onChange={handleChangeLanguage}
+      options={[
+        { value: 'en', label: 'English' },
+        { value: 'ru', label: 'Russian' },
+        { value: 'ua', label: 'Ukrainian' },
+      ]}
+      />
       <StyledNav className="sidebar__navigation">
         <NavLink to='/dashboard' end>
-          Dashboard
+          {t('dashboard')}
         </NavLink>
         <NavLink to='/dashboard/transactions'>
           Transactions
