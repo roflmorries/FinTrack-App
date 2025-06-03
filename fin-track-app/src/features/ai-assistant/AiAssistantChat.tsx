@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { SelectAllTransactions } from '../../entities/transactions/model/transactionsSelectors';
 import { Input, Spin, Button } from 'antd';
@@ -46,13 +46,17 @@ const ChatContainer = styled.div`
   }
 `;
 
-const MessageRow = styled.div<{ isUser: boolean }>`
+const MessageRow = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isUser'
+})<{ isUser: boolean }>`
   display: flex;
   justify-content: ${props => (props.isUser ? 'flex-end' : 'flex-start')};
   margin-bottom: 8px;
 `;
 
-const MessageBubble = styled.div<{ isUser: boolean }>`
+const MessageBubble = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isUser'
+})<{ isUser: boolean }>`
   background: ${props => (props.isUser ? '#0057b8' : '#222')};
   color: #fff;
   padding: 10px 16px;
@@ -79,6 +83,7 @@ export default function AiAssistantChat() {
   const [messages, setMessage] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const transactions = useAppSelector(SelectAllTransactions);
   const balance = useAppSelector(selectBalance);
@@ -86,6 +91,10 @@ export default function AiAssistantChat() {
   const balanceGoalReserved = useAppSelector(selectGoalsReserved)
   const balanceHistory = useAppSelector(selectBalanceHistory)
   const user = useAppSelector(state => state.user.currentUser?.fullName) || ''
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -124,6 +133,7 @@ export default function AiAssistantChat() {
           </MessageBubble>
         </MessageRow>
       ))}
+      <div ref={chatEndRef} />
       {loading && <Spin/>}
     </ChatContainer>
     <ToolsContainer>
@@ -132,8 +142,9 @@ export default function AiAssistantChat() {
     onChange={e => setInput(e.target.value)}
     onPressEnter={e => { e.preventDefault(); sendMessage(); }}
     placeholder='Задай вопрос'
+    disabled={loading}
     />
-    <Button type="primary" onClick={sendMessage}>Отправить</Button>
+    <Button type="primary" onClick={sendMessage} disabled={loading || !input.trim()}>Отправить</Button>
     </ToolsContainer>
     </StyledContainer>
   )
