@@ -95,9 +95,15 @@ export default function AiAssistantChat() {
     setLoading(true);
 
     try {
-      const aiReply = await askAssistant(
-        input, transactions, balance, freeBalance, balanceGoalReserved, balanceHistory, user
-      )
+      const aiReply = await askAssistant({
+        question: input,
+        transactions,
+        balance,
+        freeBalance,
+        goalsReserved: balanceGoalReserved,
+        balanceHistory,
+        user
+    })
       setMessage((prev: Message[]) => [...prev, { role: "assistant", content: aiReply || "AI не ответил" }]);
     } catch (error: any) {
         if (error?.response?.status === 429) {
