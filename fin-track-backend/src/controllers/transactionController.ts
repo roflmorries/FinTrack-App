@@ -1,5 +1,5 @@
 import * as transactionService from '../services/transactionService';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export const getAll = (req: Request, res: Response) => {
   const { userId } = req.query as { userId: string };
@@ -12,11 +12,19 @@ export const create = (req: Request, res: Response) => {
   res.json(transaction);
 }
 
-export const update = (req: Request, res: Response) => {
-  const transaction = transactionService.updateTransaction(req.params.id, req.body);
-  if (!transaction) return res.status(404).json({ error: 'Not found' });
-  res.json(transaction)
-}
+export const update = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const transaction = transactionService.updateTransaction(req.params.id, req.body);
+    if (!transaction) {
+      const error = new Error('Not found');
+      (error as any).status = 404;
+      return next(error);
+    }
+    res.json(transaction);
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const remove = (req: Request, res: Response) => {
   transactionService.deleteTransaction(req.params.id);
