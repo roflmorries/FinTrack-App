@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import transactionsRouter from './routes/transactions';
-import categoriesRouter from './routes/categories';
-import detectCategoryRouter from './routes/detectCategory'
-import goalsRouter from './routes/goals'
+import transactionsRouter from './routes/transactions.js';
+import categoriesRouter from './routes/categories.js';
+import detectCategoryRouter from './routes/detectCategory.js'
+import goalsRouter from './routes/goals.js'
 
 const app = express();
 app.use(cors());
