@@ -2,9 +2,8 @@
   "name": "fin-track-backend",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src --exec \"ts-node --loader ts-node/esm\" src/app.ts",
+    "dev": "ts-node-dev src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js"
   },
