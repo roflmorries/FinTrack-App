@@ -5,7 +5,7 @@ import { useAppDispatch } from "../../shared/lib/hooks/redux/reduxTypes"
 import TransactionsList from "../../features/transactions/TransactionsList"
 import { Modal } from "antd"
 import { useState } from "react"
-import { deleteTransaction } from "../../entities/transactions/model/transactionSlice"
+import { deleteTransaction } from "../../entities/transactions/model/transactionThunk"
 
 const Layout = styled.div`
   background-color: #141414;
@@ -27,8 +27,8 @@ export default function TransactionPage() {
     setEditTransactionId(transactionId)
   }
 
-  const handleTransactionDelete = (transactionId: string) => {
-    dispatch(deleteTransaction(transactionId));
+  const handleTransactionDelete = async (transactionId: string) => {
+    await dispatch(deleteTransaction(transactionId))
   }
 
   const handleCloseModal = () => {

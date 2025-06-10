@@ -1,10 +1,10 @@
 import { Button, DatePicker, Form, Input, Radio, Select } from "antd";
 import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
-import { v4 as uuidv4 } from 'uuid';
-import { addTransaction, updateTransaction } from "../../entities/transactions/model/transactionSlice";
+// import { addTransaction, updateTransaction } from "../../entities/transactions/model/transactionSlice";
 import { useEffect, useState } from "react";
 import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
+import { createTransaction, updateTransaction } from "../../entities/transactions/model/transactionThunk";
 // import { saveTransactionsToStorage } from "../../entities/transactions/model/transactionThunk";
 
 
@@ -40,29 +40,28 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   }, [transactionId, currentTransaction, form]);
 
 
-  const handleTransactionForm = (values: any) => {
+  const handleTransactionForm = async (values: any) => {
     if (!userId) return;
 
-    const newTransaction = {
-      id: uuidv4(),
+    const transactionData = {
       userId,
       ...values,
       date: values.date ? dayjs(values.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"),
       amount: Number(values.amount)
     };
 
-    dispatch(addTransaction(newTransaction));
+    await dispatch(createTransaction(transactionData))
 
     form.resetFields();
 
     if (onSave) onSave();
   }
 
-  const handleTransactionEdit = (values: any) => {
+  const handleTransactionEdit = async (values: any) => {
     if (!transactionId) return;
     // console.log(values)
 
-    const updateTransactione = {
+    const updatedransaction = {
       id: transactionId,
       changes: {
         userId,
@@ -71,9 +70,10 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
         amount: Number(values.amount)
       }
     }
-    dispatch(updateTransaction(updateTransactione))
+    
+    await dispatch(updateTransaction(updatedransaction))
 
-    // form.resetFields(); // <--- сбрасываем форму!
+    // form.resetFields(); // check!
     onSave();
   }
 
