@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/red
 import { useEffect, useState } from "react";
 import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
 import { createTransaction, updateTransaction } from "../../entities/transactions/model/transactionThunk";
+import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
+import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 // import { saveTransactionsToStorage } from "../../entities/transactions/model/transactionThunk";
 
 
@@ -14,7 +16,8 @@ interface TransactionFormProps {
 }
 
 export default function TransactionForm({ onSave, transactionId }: TransactionFormProps) {
-  const categories = useAppSelector(state => state.category.entities ? Object.values(state.category.entities) : []);
+  // const categories = useAppSelector(state => state.category.entities ? Object.values(state.category.entities) : []);
+  const categories = useAppSelector(selectAllCategories);
   const userId = useAppSelector(state => state.user.currentUser?.uid)
   const dispatch = useAppDispatch();
   const currentTransaction = useAppSelector(state => transactionId ? SelectTransactionById(state, transactionId) : undefined);
@@ -22,7 +25,8 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   // const [initialDate, setDate] = useState('');
   const [form] = Form.useForm();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
-  const goals = useAppSelector(state => state.goal.entities ? Object.values(state.goal.entities) : []);
+  // const goals = useAppSelector(state => state.goal.entities ? Object.values(state.goal.entities) : []);
+  const goals = useAppSelector(selectAllGoals);
 
   useEffect(() => {
     if (transactionId && currentTransaction) {
@@ -59,7 +63,6 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
 
   const handleTransactionEdit = async (values: any) => {
     if (!transactionId) return;
-    // console.log(values)
 
     const updatedransaction = {
       id: transactionId,
