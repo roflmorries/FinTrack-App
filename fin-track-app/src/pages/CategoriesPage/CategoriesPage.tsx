@@ -5,7 +5,7 @@ import { useState } from "react";
 import CategoriesList from "../../features/categories/CategoriesList";
 import { Button, Modal } from "antd";
 import CategoryForm from "../../features/categories/CategoryForm";
-import { deleteCategory } from "../../entities/categories/model/categorySlice";
+import { deleteCategory } from "../../entities/categories/model/categoryThunk";
 
 const Layout = styled.div`
   background-color: #141414;
@@ -28,8 +28,8 @@ export default function CategoriesPage() {
     setEditCategoryId(categoryId)
   }
 
-  const handleTransactionDelete = (categoryId: string) => {
-    dispatch(deleteCategory(categoryId));
+  const handleTransactionDelete = async (categoryId: string) => {
+    await dispatch(deleteCategory(categoryId));
   }
 
   const handleCloseModal = () => {
