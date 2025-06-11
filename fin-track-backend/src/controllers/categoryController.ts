@@ -13,7 +13,7 @@ export const create = (req: Request, res: Response) => {
   res.json(category)
 }
 
-export const update = (req: Request, res: Response, next: NextFunction) => {
+export const update = (req: Request, res: Response, next: NextFunction): void => {
   try {
     const category = categoryService.updateCategory(req.params.id, req.body);
     if (!category) {
@@ -21,7 +21,7 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
       (error as any).status = 404;
       return next(error);
     }
-    return res.json(category)
+    res.json(category)
   } catch (error) {
     next(error)
   }
