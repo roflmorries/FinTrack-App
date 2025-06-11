@@ -8,6 +8,7 @@ export const getAll = (req: Request, res: Response) => {
 }
 
 export const create = (req: Request, res: Response) => {
+  console.log('Received transactions', req.body)
   const transaction = transactionService.createTransaction(req.body);
   res.json(transaction);
 }

@@ -7,6 +7,7 @@ import goalsRouter from './routes/goals'
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 app.use('/transactions', transactionsRouter);
 app.use('/categories', categoriesRouter);
