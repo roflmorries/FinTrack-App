@@ -1,9 +1,8 @@
 import { Button, Form, Input, ColorPicker } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
-import { v4 as uuidv4 } from 'uuid'
-import { addCategory, updateCategory } from '../../entities/categories/model/categorySlice';
 import { useEffect } from 'react';
 import { selectCategoryById } from '../../entities/categories/model/categorySelectors';
+import { createCategory, updateCategory } from '../../entities/categories/model/categoryThunk';
 
 type CategoryFormProps = {
   onSave: () => void;
@@ -28,24 +27,23 @@ export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) 
     }
   }, [categoryId, currentCategory, form]);
 
-  const handleSaveCategory = (values: {name: string, color: string}) => {
+  const handleSaveCategory = async (values: {name: string, color: string}) => {
     if (!userId) return;
 
     const newCategory = {
-      id: uuidv4(),
       userId,
       name: values.name,
       color: values.color
     }
     console.log(newCategory)
 
-    dispatch(addCategory(newCategory));
+    await dispatch(createCategory(newCategory));
 
     form.resetFields()
     onSave()
   }
 
-  const handleEditCategory = (values: {name: string, color: string}) => {
+  const handleEditCategory = async (values: {name: string, color: string}) => {
     if (!categoryId) return;
 
     const updatedCategory = {
@@ -57,7 +55,7 @@ export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) 
       }
     }
 
-    dispatch(updateCategory(updatedCategory))
+    await dispatch(updateCategory(updatedCategory))
     onSave();
   }
 
