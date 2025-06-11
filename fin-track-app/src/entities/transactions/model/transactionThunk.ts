@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Transaction } from "./types";
 import axios from 'axios'
-
-const API_URL = "http://localhost:3001/transactions";
+import { API_URL } from "../../../shared/config/config";
 
 // export const fetchTransactions = createAsyncThunk<Transaction[], string>('transactions/fetchAll',
 //   async userId => {
