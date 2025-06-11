@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Category } from "./types";
-import { fetchCategories, saveCategoriesToStorageMock } from "./categoryThunk";
+import { createCategory, deleteCategory, fetchCategories, updateCategory } from "./categoryThunk";
 
 
 export const categoryAdapter = createEntityAdapter<Category>();
@@ -14,34 +14,6 @@ const categorySlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
-    addCategory: (state, action: PayloadAction<Category>) => {
-      categoryAdapter.addOne(state, action.payload);
-      saveCategoriesToStorageMock({
-        userId: action.payload.userId,
-        categories: Object.values(state.entities)
-      });
-    },
-    updateCategory: (state, action: PayloadAction<{ id: string; changes: Partial<Category> }>) => {
-      categoryAdapter.updateOne(state, action.payload);
-      const updated = state.entities[action.payload.id];
-      if (updated) {
-        saveCategoriesToStorageMock({
-          userId: updated.userId,
-          categories: Object.values(state.entities),
-        })
-      }
-    },
-    deleteCategory: (state, action: PayloadAction<string>) => {
-      const id = action.payload;
-      const userId = state.entities[id]?.userId;
-      categoryAdapter.removeOne(state, id);
-      if (userId) {
-        saveCategoriesToStorageMock({
-          userId,
-          categories: Object.values(state.entities)
-        })
-      }
-    },
     setAllCategories: (state, action: PayloadAction<Category[]>) => {
       categoryAdapter.setAll(state, action.payload);
     }
@@ -60,9 +32,51 @@ const categorySlice = createSlice({
         state.loading = false;
         state.error = 'failed to fetch categories'
       })
+
+      .addCase(createCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        categoryAdapter.addOne(state, action.payload);
+      })
+      .addCase(createCategory.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createCategory.rejected, state => {
+        state.loading = false;
+        state.error = 'Failed to create category'
+      })
+
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        categoryAdapter.updateOne(state, {
+          id: action.payload.id,
+          changes: action.payload
+        })
+      })
+      .addCase(updateCategory.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCategory.rejected, state => {
+        state.loading = false;
+        state.error = 'Failed to update category'
+      })
+
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        categoryAdapter.removeOne(state, action.payload)
+      })
+      .addCase(deleteCategory.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteCategory.rejected, state => {
+        state.loading = false;
+        state.error = 'Failed to delete category'
+      })
   }
 })
 
-export const {addCategory, updateCategory, deleteCategory, setAllCategories} = categorySlice.actions;
+// export const {setAllCategories} = categorySlice.actions;
 
 export default categorySlice.reducer;
