@@ -1,5 +1,6 @@
 import * as transactionService from '../services/transactionService';
 import { NextFunction, Request, Response } from 'express';
+import { transactionSchema, transactionUpdateSchema } from '../validation/transactionSchema';
 
 export const getAll = (req: Request, res: Response) => {
   const { userId } = req.query as { userId: string };
@@ -7,19 +8,32 @@ export const getAll = (req: Request, res: Response) => {
   res.json(transactions);
 }
 
-export const create = (req: Request, res: Response) => {
-  console.log('Received transactions', req.body)
-  const transaction = transactionService.createTransaction(req.body);
+export const create = (req: Request, res: Response, next: NextFunction) => {
+  const { error, value } = transactionSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ error: error.details[0].message });
+    return;
+  }
+  try {
+  console.log('Received transactions', value)
+  const transaction = transactionService.createTransaction(value);
   res.json(transaction);
+  } catch (error) {
+    next(error)
+  }
 }
 
 export const update = (req: Request, res: Response, next: NextFunction) => {
+  const { error, value } = transactionUpdateSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ error: error.details[0].message });
+    return;
+  }
   try {
-    const transaction = transactionService.updateTransaction(req.params.id, req.body);
+    const transaction = transactionService.updateTransaction(req.params.id, value);
     if (!transaction) {
-      const error = new Error('Not found');
-      (error as any).status = 404;
-      return next(error);
+      res.status(404).json({ error: 'Not found' });
+      return;
     }
     res.json(transaction);
   } catch (err) {
