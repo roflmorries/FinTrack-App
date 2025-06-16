@@ -3,6 +3,8 @@ import { Transaction } from "./types";
 import axios from 'axios'
 import { API_URL } from "../../../shared/config/config";
 
+const API_URL_TRANSACTIONS = `${API_URL}/transactions`;
+
 // export const fetchTransactions = createAsyncThunk<Transaction[], string>('transactions/fetchAll',
 //   async userId => {
 //     const data = localStorage.getItem(`transactions_${userId}`);
@@ -12,28 +14,28 @@ import { API_URL } from "../../../shared/config/config";
 
 export const fetchTransactions = createAsyncThunk<Transaction[], string>('transactions/fetchAll',
   async (userId: string) => {
-    const response = await axios.get<Transaction[]>(`${API_URL}?userId=${userId}`);
+    const response = await axios.get<Transaction[]>(`${API_URL_TRANSACTIONS}?userId=${userId}`);
     return response.data;
   }
 );
 
 export const createTransaction = createAsyncThunk<Transaction, Omit<Transaction, 'id'>>('transactions/create',
   async (transaction) => {
-    const response = await axios.post<Transaction>(API_URL, transaction);
+    const response = await axios.post<Transaction>(API_URL_TRANSACTIONS, transaction);
     return response.data;
   }
 );
 
 export const updateTransaction = createAsyncThunk<Transaction, {id: string; changes: Partial<Transaction>}>('transactions/update',
   async ({ id, changes }) => {
-    const response = await axios.put<Transaction>(`${API_URL}/${id}`, changes);
+    const response = await axios.put<Transaction>(`${API_URL_TRANSACTIONS}/${id}`, changes);
     return response.data;
   }
 );
 
 export const deleteTransaction = createAsyncThunk<string, string>('transactions/delete',
   async id => {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL_TRANSACTIONS}/${id}`);
     return id;
   }
 );
