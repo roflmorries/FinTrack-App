@@ -7,7 +7,7 @@ export const getTransactionsByUser = (userId: string): Transaction[] => {
   return data.transactions.filter(tx => tx.userId === userId);
 }
 
-export const createTransaction = (transaction: Omit<Transaction, 'id'>): Transaction => {
+export const createTransaction = (transaction: Omit<Transaction, 'id'>): Transaction | null => {
   const data = db.read();
   const newTransaction: Transaction = { ...transaction, id: uuidv4() };
   data.transactions.push(newTransaction);
