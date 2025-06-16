@@ -6,7 +6,7 @@ export const categorySchema = Joi.object({
   color: Joi.string().pattern(/^#[0-9A-Fa-f]{6}$/).required(),
 });
 
-export const categorySchemaUpdate = categorySchema.fork(
-  ['name', 'color'],
-  (field) => field.optional()
-);
+export const categoryUpdateSchema = Joi.object({
+  name: Joi.string().max(30),
+  color: Joi.string().pattern(/^#[0-9A-Fa-f]{6}$/),
+}).min(1);
