@@ -4,6 +4,10 @@ import { transactionSchema, transactionUpdateSchema } from '../validation/transa
 
 export const getAll = (req: Request, res: Response) => {
   const { userId } = req.query as { userId: string };
+  if (!userId) {
+    res.status(400).json({ error: 'userId is required' });
+    return;
+  }
   const transactions = transactionService.getTransactionsByUser(userId);
   res.json(transactions);
 }
@@ -42,6 +46,11 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const remove = (req: Request, res: Response) => {
-  transactionService.deleteTransaction(req.params.id);
+  const { id } = req.params;
+  if (!id) {
+    res.status(400).json({ error: 'id is required' });
+    return;
+  }
+  transactionService.deleteTransaction(id);
   res.json({ succes: true });
 }
