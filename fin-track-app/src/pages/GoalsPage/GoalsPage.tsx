@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import GoalsList from "../../features/goals/GoalsList";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
-import { deleteGoal } from "../../entities/fin-goals/goalSlice";
+// import { deleteGoal } from "../../entities/fin-goals/goalSlice";
 import { Button, Modal } from "antd";
+import { deleteGoal } from "../../entities/fin-goals/goalThunk";
 
 type Props = {}
 

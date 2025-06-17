@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes'
 import { Button, DatePicker, Form, Input, InputNumber } from 'antd';
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 import { selectGoalById } from '../../entities/fin-goals/goalSelectors';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
-import { addGoal, updateGoal } from '../../entities/fin-goals/goalSlice';
+import { createGoal, updateGoal } from '../../entities/fin-goals/goalThunk';
 
 type GoalFormProps = {
   onSave: () => void,
@@ -35,14 +35,13 @@ export default function GoalForm({onSave, goalId}: GoalFormProps) {
     if (!userId) return;
 
     const newGoal = {
-      id: uuidv4(),
       userId,
       ...values,
       deadline: values.deadline ? dayjs(values.deadline).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD")
     }
     console.log(newGoal);
 
-    dispatch(addGoal(newGoal));
+    dispatch(createGoal(newGoal));
 
 
     onSave();
