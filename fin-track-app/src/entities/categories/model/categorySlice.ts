@@ -77,6 +77,5 @@ const categorySlice = createSlice({
   }
 })
 
-// export const {setAllCategories} = categorySlice.actions;
 
 export default categorySlice.reducer;

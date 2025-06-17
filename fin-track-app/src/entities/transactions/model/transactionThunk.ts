@@ -5,12 +5,6 @@ import { API_URL } from "../../../shared/config/config";
 
 const API_URL_TRANSACTIONS = `${API_URL}/transactions`;
 
-// export const fetchTransactions = createAsyncThunk<Transaction[], string>('transactions/fetchAll',
-//   async userId => {
-//     const data = localStorage.getItem(`transactions_${userId}`);
-//     return data ? JSON.parse(data) : [];
-//   }
-// );
 
 export const fetchTransactions = createAsyncThunk<Transaction[], string>('transactions/fetchAll',
   async (userId: string) => {
@@ -39,17 +33,6 @@ export const deleteTransaction = createAsyncThunk<string, string>('transactions/
     return id;
   }
 );
-
-// export const saveTransactionsToStorage = createAsyncThunk<void, {userId: string, transactions: Transaction[]}>(
-//   'transactions/saveAll',
-//   async ({userId, transactions}) => {
-//     localStorage.setItem(`transactions_${userId}`, JSON.stringify(transactions));
-//   }
-// );
-
-// export function saveTransactionsToStorageMock({ userId, transactions }: { userId: string, transactions: Transaction[] }) {
-//   localStorage.setItem(`transactions_${userId}`, JSON.stringify(transactions));
-// };
 
 export const detectCategoryByDescription = createAsyncThunk<string, string>(
   'categories/detectCategoryByDescription',

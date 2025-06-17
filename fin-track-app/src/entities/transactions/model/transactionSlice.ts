@@ -15,34 +15,7 @@ const initialState = transactionAdapter.getInitialState({
 const transactionsSlice = createSlice({
   name: 'transactions',
   initialState,
-  reducers: {
-    // addTransaction: (state, action: PayloadAction<Transaction>) => {
-    //   transactionAdapter.addOne(state, action.payload);
-    //   saveTransactionsToStorageMock({
-    //     userId: action.payload.userId,
-    //     transactions: Object.values(state.entities)
-    //   })
-    // },
-    // updateTransaction: (state, action: PayloadAction<{id: string; changes: Partial<Transaction>}>) => {
-    //   transactionAdapter.updateOne(state, action.payload);
-    //   const updated = state.entities[action.payload.id]
-    //     saveTransactionsToStorageMock({
-    //       userId: updated.userId,
-    //       transactions: Object.values(state.entities)
-    //   })
-    // },
-    // deleteTransaction: (state, action: PayloadAction<string>) => {
-    //   const id = action.payload;
-    //   const userId = state.entities[id]?.userId;
-    //   transactionAdapter.removeOne(state, action.payload);
-    //     if (userId) {
-    //       saveTransactionsToStorageMock({
-    //         userId,
-    //         transactions: Object.values(state.entities)
-    //       });
-    //     }
-    // },
-  },
+  reducers: {},
   extraReducers: builder => {
     builder
 
@@ -100,6 +73,5 @@ const transactionsSlice = createSlice({
   }
 })
 
-// export const {addTransaction, updateTransaction, deleteTransaction} = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;
