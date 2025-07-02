@@ -1,3 +1,4 @@
+import { defaultCategories } from "../data/defaultCategories";
 import { Category } from "../types";
 import * as db from '../utils/db';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,4 +36,16 @@ export const deleteCategory = (id: string): void => {
   const data = db.read();
   data.categories = data.categories.filter(category => category.id !== id);
   db.write(data);
+};
+
+export const createDefaultCategoriesForUser = (userId: string) => {
+  const data = db.read();
+  const newCategories = defaultCategories.map(categories => ({
+    id: uuidv4(),
+    userId,
+    ...categories
+  }));
+  data.categories.push(...newCategories);
+  db.write(data);
+  return newCategories;
 }
