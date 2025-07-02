@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as userService from '../services/userService';
+import * as categoryService from '../services/categoryService';
 
 export const create = (req: Request, res: Response) => {
   const { uid, email, fullName, avatar } = req.body;
@@ -7,7 +8,7 @@ export const create = (req: Request, res: Response) => {
     res.status(400).json({ error: 'Missed required fields' });
   };
   const user = userService.createUser({ uid, email, fullName, avatar });
-  /// TDF: create default categories
+  categoryService.createDefaultCategoriesForUser(uid);
   res.json(user);
 };
 
