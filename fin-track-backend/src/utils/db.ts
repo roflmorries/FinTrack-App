@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { Category, Goal, Transaction } from '../types';
+import { Category, Goal, Transaction, User } from '../types';
 
 const DATA_FILE = path.join(process.cwd(), 'db.json');
 
 interface DBData {
   transactions: Transaction[];
   categories: Category[];
-  goals: Goal[]
+  goals: Goal[],
+  users: User[]
 }
 
 export const read = (): DBData => {
