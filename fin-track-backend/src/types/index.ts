@@ -23,3 +23,10 @@ export interface Goal {
   amount: number,
   deadline: string
 }
+
+export interface User {
+  uid: string,
+  email: string,
+  fullName: string,
+  avatar: string
+}
