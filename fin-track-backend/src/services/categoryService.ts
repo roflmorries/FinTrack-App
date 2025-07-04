@@ -40,6 +40,12 @@ export const deleteCategory = (id: string): void => {
 
 export const createDefaultCategoriesForUser = (userId: string) => {
   const data = db.read();
+  const alreadyExists = data.categories.some(
+    cat => cat.userId === userId && defaultCategories.some(def => def.name === cat.name)
+  );
+  if (alreadyExists) {
+    return [];
+  }
   const newCategories = defaultCategories.map(categories => ({
     id: uuidv4(),
     userId,
