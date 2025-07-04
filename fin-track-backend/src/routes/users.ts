@@ -5,6 +5,6 @@ const router = Router();
 
 router.post('/', userController.create);
 router.patch('/:uid', userController.update);
-router.put('/:uid', userController.getOne);
+router.get('/:uid', userController.getOne);
 
 export default router;
