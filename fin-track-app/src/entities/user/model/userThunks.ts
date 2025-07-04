@@ -75,8 +75,9 @@ export const fetchUserData = createAsyncThunk<User, string>('user/fetchUserData'
   }
 );
 
-export const signInUserWithGoogle = createAsyncThunk<User, void>('user/signInWithGoogle',
-    async (_, { rejectWithValue }) => {
+export const signInUserWithGoogle = createAsyncThunk<User, void>(
+  'user/signInWithGoogle',
+  async (_, { rejectWithValue }) => {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
@@ -88,31 +89,19 @@ export const signInUserWithGoogle = createAsyncThunk<User, void>('user/signInWit
       const avatar = user.photoURL || '';
       const token = await getIdToken(user);
 
-      console.log(user)
-      // const userRef = doc(db, 'users', uid);
-      // const userSnap = await getDoc(userRef);
-
-      // let userData: User;
-
-      // if (!userSnap.exists()) {
-      //   userData = {
-      //     uid,
-      //     email: user.email || '',
-      //     fullName: user.displayName || '',
-      //     avatar: user.photoURL || '',
-      //   };
-      //   await setDoc(userRef, userData);
-      // } else {
-      //   userData = userSnap.data() as User;
-      // }
-
-      await axios.post(`${API_URL}/users`, { uid, email, fullName, avatar }, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).catch(() => { /* ignore if already exists */ });
+      try {
+        await axios.post(`${API_URL}/users`, { uid, email, fullName, avatar }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (error: any) {
+        if (!axios.isAxiosError(error) || error.response?.status !== 409) {
+          throw error;
+        }
+      }
 
       const res = await axios.get<User>(`${API_URL}/users/${uid}`, {
-        headers: {Authorization: `Bearer ${token}`}
-      })
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
       return res.data;
     } catch (error: any) {
