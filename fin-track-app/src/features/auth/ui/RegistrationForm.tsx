@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { registerUser } from '../../../entities/user/model/userThunks';
 import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
 import { useNavigate } from 'react-router-dom';
+import { uploadAvatar } from '../../../shared/api/uploadAvatar';
 // import imageCompression from 'browser-image-compression';
 
 type Props = {}
 
 export default function RegistrationForm({}: Props) {
-
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user)
@@ -23,21 +24,22 @@ export default function RegistrationForm({}: Props) {
 
 
 
-  const handleRegisterForm = (values: any) => {
+  const handleRegisterForm = async (values: any) => {
     try {
-    const newUser = {...values, avatar}
-    console.log(newUser)
-    dispatch(registerUser(newUser))} catch (error) {
-      console.error(error);
-    }
+      let avatar = null;
+      if (avatarFile) {
+        avatar = await uploadAvatar(avatarFile)
+      };
+      const newUser = {...values, avatar}
+      console.log(newUser)
+      dispatch(registerUser(newUser))} catch (error) {
+        console.error(error);
+      }
   }
 
   const handleUploadAvatar = (file: RcFile) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setAvatar(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    setAvatarFile(file);
+    setAvatar(URL.createObjectURL(file));
     return false;
   };
 
