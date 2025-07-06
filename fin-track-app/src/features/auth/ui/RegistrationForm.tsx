@@ -5,7 +5,6 @@ import { registerUser } from '../../../entities/user/model/userThunks';
 import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
 import { useNavigate } from 'react-router-dom';
 import { uploadAvatar } from '../../../shared/api/uploadAvatar';
-// import imageCompression from 'browser-image-compression';
 
 type Props = {}
 
@@ -32,7 +31,7 @@ export default function RegistrationForm({}: Props) {
       };
       const newUser = {...values, avatar}
       console.log(newUser)
-      dispatch(registerUser(newUser))} catch (error) {
+      await dispatch(registerUser(newUser))} catch (error) {
         console.error(error);
       }
   }
