@@ -2,56 +2,48 @@ import { defaultCategories } from "../data/defaultCategories";
 import { Category } from "../types";
 import * as db from '../utils/db';
 import { v4 as uuidv4 } from 'uuid';
+import { CategoryModel } from "../models/Category";
 
 
-export const getCategoriesByUser = (userId: string): Category[] => {
-  const data = db.read();
-  return data.categories.filter(category => category.userId === userId);
+export const getCategoriesByUser = async (userId: string): Promise <Category[]> => {
+  const found = await CategoryModel.find({ userId }).lean();
+  return found.map(({ id, userId, name, color }) => ({
+    id, userId, name, color
+  }));
 };
 
-export const createCategory = (category: Omit<Category, 'id'>): Category => {
-  const data = db.read();
+export const createCategory = async (category: Omit<Category, 'id'>): Promise <Category> => {
   const newCategory = {
     id: uuidv4(),
     ...category
-  }
-  data.categories.push(newCategory);
-  db.write(data);
-  return newCategory;
+  };
+  const created = await CategoryModel.create(newCategory);
+  const { id, userId, name, color } = created.toObject();
+  return { id, userId, name, color };
 };
 
-export const updateCategory = (id: string, updates: Partial<Category>): Category | null => {
-  const data = db.read();
-  const idx = data.categories.findIndex(category => category.id === id);
-  if (idx === -1) return null;
-  data.categories[idx] = {
-    ...data.categories[idx],
-    ...updates
-  }
-  db.write(data)
-  return data.categories[idx];
+export const updateCategory = async (id: string, updates: Partial<Category>): Promise <Category | null> => {
+  const updated = await CategoryModel.findOneAndUpdate({id}, updates, {new: true});
+  if (!updated) return null;
+  const { id: catId, userId, name, color } = updated.toObject();
+  return { id: catId, userId, name, color };
 };
 
-export const deleteCategory = (id: string): void => {
-  const data = db.read();
-  data.categories = data.categories.filter(category => category.id !== id);
-  db.write(data);
+export const deleteCategory = async (id: string): Promise <void >=> {
+  await CategoryModel.deleteOne({ id });
 };
 
-export const createDefaultCategoriesForUser = (userId: string) => {
-  const data = db.read();
-  const alreadyExists = data.categories.some(
-    cat => cat.userId === userId && defaultCategories.some(def => def.name === cat.name)
-  );
-  if (alreadyExists) {
-    return [];
-  }
+export const createDefaultCategoriesForUser = async (userId: string): Promise <Category[]> => {
+  const exists = await CategoryModel.exists({
+    userId,
+    name: { $in: defaultCategories.map(def => def.name) }
+  });
+  if (exists) return [];
   const newCategories = defaultCategories.map(categories => ({
     id: uuidv4(),
     userId,
     ...categories
   }));
-  data.categories.push(...newCategories);
-  db.write(data);
-  return newCategories;
+  await CategoryModel.insertMany(newCategories);
+  return newCategories
 }
