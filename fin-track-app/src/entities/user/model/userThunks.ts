@@ -65,6 +65,7 @@ export const fetchUserData = createAsyncThunk<User, string>('user/fetchUserData'
       if (!user) throw new Error('User not found');
       const token = await getIdToken(user);
 
+      await new Promise(res => setTimeout(res, 500));
       const res = await axios.get<User>(`${API_URL}/users/${uid}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
