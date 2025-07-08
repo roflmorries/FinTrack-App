@@ -24,18 +24,18 @@ export const detectCategory = async (req: Request, res: Response) => {
     if (detectedCategory) break;
   }
 
-  if (!detectCategory) {
+  if (!detectedCategory) {
     res.json({ category: null });
     return;
   };
 
-  let categoryDoc = await CategoryModel.findOne({userId, name: detectCategory});
+  let categoryDoc = await CategoryModel.findOne({userId, name: detectedCategory});
   if (!categoryDoc) {
     categoryDoc = await CategoryModel.create({
       userId,
       id: crypto.randomUUID ? crypto.randomUUID() : undefined,
-      name: detectCategory,
-      color: getRandomColor
+      name: detectedCategory,
+      color: getRandomColor()
     });
   }
 
