@@ -11,6 +11,7 @@ import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import { debounce } from 'lodash';
 import axios from "axios";
 import { API_URL } from "../../shared/config/config";
+import { fetchCategories } from "../../entities/categories/model/categoryThunk";
 
 
 interface TransactionFormProps {
@@ -99,6 +100,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
         setSelectedCategory(data.category);
         setAutoDetectCategory(data.category)
         form.setFieldValue('category', data.category)
+        dispatch(fetchCategories(userId))
       };
     } catch (error) {
       console.error(error);
