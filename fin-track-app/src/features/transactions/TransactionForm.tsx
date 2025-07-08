@@ -8,6 +8,9 @@ import { createTransaction, updateTransaction } from "../../entities/transaction
 import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 // import { saveTransactionsToStorage } from "../../entities/transactions/model/transactionThunk";
+import { debounce } from 'lodash';
+import axios from "axios";
+import { API_URL } from "../../shared/config/config";
 
 
 interface TransactionFormProps {
@@ -84,6 +87,26 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   //   setDate(dateString)
   // }
 
+  const detectCategory = debounce(async (comment: string) => {
+    if (!comment || !userId) return;
+
+    try {
+      const { data } = await axios.post<{ category: string }>(`${API_URL}/detect-category`,
+        { description: comment, userId }
+      );
+      if (data.category) {
+        setSelectedCategory(data.category);
+        form.setFieldValue('category', data.category)
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }, 400);
+
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    detectCategory(event.target.value);
+  }
+
   return (
     <Form
     layout="vertical"
@@ -135,7 +158,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       name='comment'
       label='Comment'
       >
-        <Input/>
+        <Input onChange={handleCommentChange}/>
       </Form.Item>
 
       {selectedCategory === 'Goals' && (
