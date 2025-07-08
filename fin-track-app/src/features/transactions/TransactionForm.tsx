@@ -30,6 +30,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   // const goals = useAppSelector(state => state.goal.entities ? Object.values(state.goal.entities) : []);
   const goals = useAppSelector(selectAllGoals);
+  const [autoDetectCategory, setAutoDetectCategory] = useState<string | null>(null);
 
   useEffect(() => {
     if (transactionId && currentTransaction) {
@@ -96,6 +97,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       );
       if (data.category) {
         setSelectedCategory(data.category);
+        setAutoDetectCategory(data.category)
         form.setFieldValue('category', data.category)
       };
     } catch (error) {
@@ -105,6 +107,12 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     detectCategory(event.target.value);
+    setAutoDetectCategory(null);
+  }
+
+  const handleChangeCategory = (value: string) => {
+    setSelectedCategory(value);
+    setAutoDetectCategory(null);
   }
 
   return (
@@ -138,10 +146,11 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       name='category'
       label='Category'
       rules={[{ required: true }]}
+      extra={autoDetectCategory ? 'Категория автоматически определена' : undefined}
       >
         <Select
         options={categories.map(category => ({ value: category.name, label: category.name }))}
-        onChange={value => setSelectedCategory(value)}
+        onChange={handleChangeCategory}
         />
       </Form.Item>
 
