@@ -7,9 +7,11 @@ import goalsRouter from './routes/goals';
 import userRouter from './routes/users';
 import avatarRouter from './routes/avatar';
 import { connectDB } from './config/db/db';
+import helmet from 'helmet'
 
 const app = express();
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 app.use('/transactions', transactionsRouter);
