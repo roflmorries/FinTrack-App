@@ -6,8 +6,9 @@ import detectCategoryRouter from './routes/detectCategory';
 import goalsRouter from './routes/goals';
 import userRouter from './routes/users';
 import avatarRouter from './routes/avatar';
+import assistantRouter from './routes/ai-assistant';
 import { connectDB } from './config/db/db';
-import helmet from 'helmet'
+import helmet from 'helmet';
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use('/detect-category', detectCategoryRouter);
 app.use('/goals', goalsRouter);
 app.use('/users', userRouter);
 app.use('/avatar', avatarRouter);
+app.use('/ai-assistant', assistantRouter)
 
 const PORT = 3001;
 (async () => {
