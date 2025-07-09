@@ -1,4 +1,5 @@
 import { Transaction } from '../../entities/transactions/model/types';
+import axios from 'axios';
 
 interface AskAssistantParams {
   question: string;
@@ -24,12 +25,10 @@ export const askAssistant = async ({
   balanceHistory,
   user
 }: AskAssistantParams) => {
-  const res = await fetch("http://localhost:3001/api/ai-assistant", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question, transactions, balance, freeBalance, goalsReserved, balanceHistory, user })
-  });
-  const data: AskAssistantResponse = await res.json();
-  console.log(data)
-  return data.answer;
+  const res = await axios.post<AskAssistantResponse>("http://localhost:3001/ai-assistant",
+    { question, transactions, balance, freeBalance, goalsReserved, balanceHistory, user },
+    { headers: { "Content-Type": "application/json" }}
+  );
+  console.log(res.data)
+  return res.data.answer;
 };
