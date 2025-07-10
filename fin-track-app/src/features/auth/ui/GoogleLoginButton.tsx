@@ -1,7 +1,8 @@
-import { Button } from "antd";
+import Button from "@mui/material/Button";
 import { useAppDispatch } from "../../../shared/lib/hooks/redux/reduxTypes";
 import { signInUserWithGoogle } from "../../../entities/user/model/userThunks";
 import { useNavigate } from "react-router-dom";
+import { GoogleIcon} from '../../../pages/LoginPage/components/CustomIcons';
 
 export default function GoogleLoginButton() {
   const dispatch = useAppDispatch();
@@ -21,6 +22,10 @@ export default function GoogleLoginButton() {
   }
 
   return (
-    <Button onClick={handleLoginByGoogle} >Sign in With Google</Button>
+    <Button 
+    fullWidth
+    variant="outlined"
+    startIcon={<GoogleIcon />}
+    onClick={handleLoginByGoogle} >Sign in with Google</Button>
   )
 }
