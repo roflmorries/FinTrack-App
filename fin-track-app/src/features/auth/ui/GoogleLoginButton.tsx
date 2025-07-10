@@ -26,6 +26,8 @@ export default function GoogleLoginButton() {
     fullWidth
     variant="outlined"
     startIcon={<GoogleIcon />}
-    onClick={handleLoginByGoogle} >Sign in with Google</Button>
+    onClick={handleLoginByGoogle} 
+    sx={{ borderRadius: '16px' }}
+    >Sign in with Google</Button>
   )
 }
