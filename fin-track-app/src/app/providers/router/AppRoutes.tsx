@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
+import { AnimatePresence, motion, easeInOut } from "framer-motion";
 import HomePage from "../../../pages/HomePage/HomePage"
 import PrivateRoute from "../../../shared/lib/privateRoute"
 import ApplicationPage from "../../../pages/ApplicationPage/ApplicationPage"
@@ -11,23 +12,81 @@ import CategoriesPage from "../../../pages/CategoriesPage/CategoriesPage"
 import GoalsPage from "../../../pages/GoalsPage/GoalsPage"
 import AssistantPage from "../../../pages/AssistantPage/AssistantPage"
 
-export default function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/" element={<HomePage/>} />
-      <Route path="/registration" element={<RegistrationPage/>}/>
-      <Route path="/login" element={<LoginPage/>}/>
-      <Route path="/reset-password" element={<ResetPasswordPage/>}/>
+const pageTransition = {
+  initial: { opacity: 0, y: 40 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -40 },
+  transition: { duration: 0.35, ease: easeInOut }
+};
 
-      <Route element={<PrivateRoute/>}>
-        <Route path="/dashboard" element={<ApplicationPage/>}>
-          <Route index element={<Dashboard/>}/>
-          <Route path='transactions' element={<TransactionPage/>}/>
-          <Route path='categories' element={<CategoriesPage/>}/>
-          <Route path='goals' element={<GoalsPage/>}/>
-          <Route path='ai-assistant' element={<AssistantPage/>}/>
+export default function AppRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <motion.div {...pageTransition}>
+              <HomePage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/registration"
+          element={
+            <motion.div {...pageTransition}>
+              <RegistrationPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <motion.div {...pageTransition}>
+              <LoginPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <motion.div {...pageTransition}>
+              <ResetPasswordPage />
+            </motion.div>
+          }
+        />
+        <Route
+          element={<PrivateRoute />}
+        >
+          <Route
+            path="/dashboard"
+            element={<ApplicationPage />}
+          >
+            <Route
+              index
+              element={<Dashboard />}
+            />
+            <Route
+              path="transactions"
+              element={<TransactionPage/>}
+            />
+            <Route
+              path="categories"
+              element={<CategoriesPage />}
+            />
+            <Route
+              path="goals"
+              element={<GoalsPage />}
+            />
+            <Route
+              path="ai-assistant"
+              element={<AssistantPage />}
+            />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
-  )
+      </Routes>
+    </AnimatePresence>
+  );
 }
