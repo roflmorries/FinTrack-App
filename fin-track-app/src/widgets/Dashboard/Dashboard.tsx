@@ -6,7 +6,7 @@ import { selectActiveGoalsWithProgress } from "../../entities/fin-goals/goalWith
 import PieChartWidget from "./PieChartWidget/PieChartWidget";
 
 const Layout = styled.div`
-  background-color: #141414;
+  /* background-color: #141414; */
   height: 96%;
   border-radius: 24px;
   padding: 1px;
@@ -17,7 +17,7 @@ const Layout = styled.div`
   .progress_block {
     width: 250px;
     height: 200px;
-    background-color: #262626;
+    /* background-color: #262626; */
     border-radius: 17px;
     margin-left: 50px;
   }
@@ -28,7 +28,6 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <p>DashboardLALALLALALA</p>
       <BalanceWidget/>
       <PieChartWidget/>
       {goals.map(goal => {

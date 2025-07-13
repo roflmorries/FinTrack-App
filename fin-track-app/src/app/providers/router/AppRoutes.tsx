@@ -12,6 +12,7 @@ import CategoriesPage from "../../../pages/CategoriesPage/CategoriesPage"
 import GoalsPage from "../../../pages/GoalsPage/GoalsPage"
 import AssistantPage from "../../../pages/AssistantPage/AssistantPage"
 
+
 const pageTransition = {
   initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0 },
@@ -62,7 +63,7 @@ export default function AppRoutes() {
         >
           <Route
             path="/dashboard"
-            element={<ApplicationPage />}
+            element={<ApplicationPage/>}
           >
             <Route
               index
