@@ -1,10 +1,10 @@
-import { Spin } from "antd"
-import { LoadingOutlined } from '@ant-design/icons';
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
 
 export default function Loader() {
   return (
-    <div style={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
-      <Spin indicator={<LoadingOutlined spin />} size="large" />
-    </div>
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: 'black'}}>
+      <CircularProgress sx={{ color: '#803eff'}}/>
+    </Box>
   )
 }
