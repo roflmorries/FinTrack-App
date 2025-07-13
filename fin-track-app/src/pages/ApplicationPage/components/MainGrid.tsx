@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import Box from "@mui/material/Box";
 
 const fadeTransition = {
   initial: { opacity: 0 },
@@ -56,10 +57,12 @@ export default function MainGrid() {
     //   </Grid>
     //   <Copyright sx={{ my: 4 }} />
     // </Box>
+        <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
           <AnimatePresence mode="wait">
             <motion.div key={location.pathname} {...fadeTransition}>
-              <Outlet />
+                <Outlet/>
             </motion.div>
           </AnimatePresence>
+          </Box>
   );
 }
