@@ -1,109 +1,9 @@
-// import { Button, Form, Input, Upload } from 'antd'
-// import { RcFile } from 'antd/es/upload';
-// import { useEffect, useState } from 'react'
-// import { registerUser } from '../../../entities/user/model/userThunks';
-// import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
-// import { useNavigate } from 'react-router-dom';
-// import { uploadAvatar } from '../../../shared/api/uploadAvatar';
-
-// type Props = {}
-
-// export default function RegistrationForm({}: Props) {
-//   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-//   const [avatar, setAvatar] = useState<string | null>(null);
-//   const dispatch = useAppDispatch();
-//   const { isAuth } = useAppSelector((state) => state.user)
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     if (isAuth) {
-//       navigate('/dashboard', {replace: true})
-//     }
-//   }, [isAuth, navigate])
-
-
-
-//   const handleRegisterForm = async (values: any) => {
-//     try {
-//       let avatar = null;
-//       if (avatarFile) {
-//         avatar = await uploadAvatar(avatarFile)
-//       };
-//       const newUser = {...values, avatar}
-//       console.log(newUser)
-//       await dispatch(registerUser(newUser))} catch (error) {
-//         console.error(error);
-//       }
-//   }
-
-//   const handleUploadAvatar = (file: RcFile) => {
-//     setAvatarFile(file);
-//     setAvatar(URL.createObjectURL(file));
-//     return false;
-//   };
-
-//   return (
-//     <Form name='registration' onFinish={handleRegisterForm} autoComplete='off'>
-
-//       <Form.Item
-//       label='Fullname'
-//       name='fullName'
-//       rules={[{ required: true, message: 'Введите ваше имя!' }]}
-//       >
-//         <Input/>
-//       </Form.Item>
-
-//       <Form.Item
-//       label='Email'
-//       name='email'
-//       rules={[
-//         { required: true, message: 'Введите ваш email!' },
-//         { type: 'email', message: 'Некорректный email!' },
-//       ]}
-//       >
-//         <Input/>
-//       </Form.Item>
-
-//       <Form.Item
-//       label='Password'
-//       name='password'
-//       rules={[{ required: true, message: 'Введите ваш пароль!' }]}
-//       >
-//         <Input/>
-//       </Form.Item>
-
-//       <Form.Item
-//       label='Avatar'
-//       >
-//         <Upload
-//         beforeUpload={handleUploadAvatar}
-//         showUploadList={false}
-//         accept='image/*'
-//         >
-//           <Button>Upload Avatar</Button>
-//         </Upload>
-//         {avatar && (
-//           <img
-//           src={avatar}
-//           alt="avatar"
-//           style={{ marginTop: 10, maxWidth: 100, borderRadius: 8 }}
-//           />
-//         )}
-//       </Form.Item>
-//       <Button type="primary" htmlType="submit">Register</Button>
-//     </Form>
-//   )
-// }
-
-
-
-
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
+// import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -114,19 +14,21 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../../../shared/shared-theme/AppTheme';
 import ColorModeSelect from '../../../shared/shared-theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../../pages/RegistrationPage/components/CustomIcons';
+import { FacebookIcon, SitemarkIcon } from '../../../pages/RegistrationPage/components/CustomIcons';
 import { useEffect, useState } from 'react'
 import { registerUser } from '../../../entities/user/model/userThunks';
 import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
 import { useNavigate } from 'react-router-dom';
 import { uploadAvatar } from '../../../shared/api/uploadAvatar';
 import GoogleLoginButton from './GoogleLoginButton';
+import Avatar from '@mui/material/Avatar';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
+  borderRadius: `calc(${theme.shape.borderRadius}px + 26px)`,
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
@@ -159,7 +61,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     backgroundRepeat: 'no-repeat',
     ...theme.applyStyles('dark', {
       backgroundImage:
-        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+        'radial-gradient(at 50% 50%, hsla(270, 100%, 22%, 0.5), hsl(270, 30%, 5%))',
     }),
   },
 }));
@@ -216,6 +118,24 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
           >
             Sign up
           </Typography>
+                        {avatar && (
+                // <img
+                //   src={avatar}
+                //   alt="avatar"
+                //   style={{ marginTop: 10, maxWidth: 100, borderRadius: 24, alignSelf: 'flex-end', marginBottom: '1%', position: 'absolute'}}
+                // />
+                <Avatar
+                alt="User Avatar" 
+                src={avatar} 
+                sx={{
+                  alignSelf: 'flex-end', 
+                  position: 'absolute', 
+                  marginTop: '1%', 
+                  height: 100, 
+                  width: 100,
+                }}
+                />
+              )}
           <Box
             component="form"
             onSubmit={handleRegisterForm}
@@ -230,6 +150,11 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
                 fullWidth
                 id="fullName"
                 placeholder="Jon Snow"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '16px',
+                  }
+                }}
                 // error={nameError}
                 // helperText={nameErrorMessage}
                 // color={nameError ? 'error' : 'primary'}
@@ -248,6 +173,11 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
                 // error={emailError}
                 // helperText={emailErrorMessage}
                 // color={passwordError ? 'error' : 'primary'}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '16px',
+                  }
+                }}
               />
             </FormControl>
             <FormControl>
@@ -261,6 +191,11 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
                 id="password"
                 autoComplete="new-password"
                 variant="outlined"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '16px',
+                  }
+                }}
                 // error={passwordError}
                 // helperText={passwordErrorMessage}
                 // color={passwordError ? 'error' : 'primary'}
@@ -268,7 +203,7 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="avatar">Avatar</FormLabel>
-              <Button variant="outlined" component="label">
+              <Button variant="outlined" component="label" sx={{marginBottom: '2%', borderRadius: '16px'}}>
                 Upload Avatar
                 <input
                   type="file"
@@ -278,18 +213,12 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
                   name="avatar"
                 />
               </Button>
-              {avatar && (
-                <img
-                  src={avatar}
-                  alt="avatar"
-                  style={{ marginTop: 10, maxWidth: 100, borderRadius: 8 }}
-                />
-              )}
             </FormControl>
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              sx={{borderRadius: '16px'}}
             >
               Sign up
             </Button>
@@ -304,6 +233,7 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
               variant="outlined"
               onClick={() => alert('Sign up with Facebook')}
               startIcon={<FacebookIcon />}
+              sx={{borderRadius: '16px'}}
             >
               Sign up with Facebook
             </Button>
