@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, getIdToken, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { User } from "./types";
-import { createAsyncThunk} from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { auth } from "../../../shared/config/firebase";
 import axios from "axios";
 import { API_URL } from "../../../shared/config/config";
@@ -115,6 +115,28 @@ export const userLogOut = createAsyncThunk<void, void>('user/logout',
   async (_, {rejectWithValue}) => {
     try {
       await signOut(auth);
+    } catch (error: any) {
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+export const updateUser = createAsyncThunk<User, Partial<User>>('user/updateUser',
+  async (changes,  {rejectWithValue }) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('User not found');
+      const token = await getIdToken(user);
+
+      await axios.patch(`${API_URL}/users/${user.uid}`, changes, {
+        headers: { Authorization: `Bearer ${token}`}
+      });
+
+      const res = await axios.get<User>(`${API_URL}/users/${user.uid}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      return res.data;
     } catch (error: any) {
       return rejectWithValue(error.message)
     }
