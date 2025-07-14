@@ -26,7 +26,9 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
-  const user = useAppSelector(state => state.user.currentUser);
+  const avatar = useAppSelector(state => state.user.currentUser?.avatar);
+  const fullName = useAppSelector(state => state.user.currentUser?.fullName);
+  const email = useAppSelector(state => state.user.currentUser?.email);
   const [modal2Open, setModal2Open] = useState(false);
 
   return (
@@ -56,15 +58,15 @@ export default function SideMenu() {
         <Avatar
           sizes="small"
           alt="Avatar"
-          src={user?.avatar}
+          src={avatar}
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            {user?.fullName}
+            {fullName}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            {user?.email}
+            {email}
           </Typography>
         </Box>
         <OptionsMenu />
