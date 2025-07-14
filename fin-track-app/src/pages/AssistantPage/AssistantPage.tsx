@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import { lazy, Suspense } from "react";
-import styled from "styled-components";
 const AiAssistantChat = lazy(() => import ("../../features/ai-assistant/AiAssistantChat"))
 
 

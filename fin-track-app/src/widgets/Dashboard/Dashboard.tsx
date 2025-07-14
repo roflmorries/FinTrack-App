@@ -4,6 +4,7 @@ import { Progress } from "antd";
 import BalanceWidget from "./BalanceWidget/BalanceWidget";
 import { selectActiveGoalsWithProgress } from "../../entities/fin-goals/goalWithProgressSelector";
 import PieChartWidget from "./PieChartWidget/PieChartWidget";
+import MonthlyBudgetWidget from "./MonthlyBudgetWidget/MonthlyBudgetWidget";
 
 const Layout = styled.div`
   /* background-color: #141414; */
@@ -30,7 +31,8 @@ export default function Dashboard() {
     <Layout>
       <BalanceWidget/>
       <PieChartWidget/>
-      {goals.map(goal => {
+      <MonthlyBudgetWidget/>
+      {/* {goals.map(goal => {
       const percent = Math.min((goal.progress / goal.amount) * 100, 100);
       return (
         <div key={goal.id} className="progress_block">
@@ -39,7 +41,7 @@ export default function Dashboard() {
           <p>{goal.progress} / {goal.amount}</p>
         </div>
       );
-    })}
+    })} */}
     </Layout>
   )
 }

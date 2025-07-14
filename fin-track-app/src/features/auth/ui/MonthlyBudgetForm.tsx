@@ -6,9 +6,11 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { updateUser } from '../../../entities/user/model/userThunks';
 
-type Props = {}
+type MonthlyBudgetFormProps = {
+  onSuccess?: () => void;
+}
 
-export default function MonthlyBudgetForm({}: Props) {
+export default function MonthlyBudgetForm({ onSuccess }: MonthlyBudgetFormProps) {
   const dispatch = useAppDispatch();
   const budget = useAppSelector(selectMonthlyBudget);
   const [value, setValue] = useState(budget?.toString() ?? "");
@@ -17,7 +19,8 @@ export default function MonthlyBudgetForm({}: Props) {
     event.preventDefault();
     const numValue = Number(value)
     if (!isNaN(numValue)) {
-      dispatch(updateUser({ monthlyBudget: numValue }))
+      dispatch(updateUser({ monthlyBudget: numValue }));
+      if (onSuccess) onSuccess();
     }
   }
 

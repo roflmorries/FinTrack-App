@@ -40,7 +40,8 @@ export default function SideMenu() {
           backgroundColor: 'background.paper',
           borderRight: 'none', 
           borderTop: 'none',
-          boxShadow: 'none'
+          boxShadow: 'none',
+          borderRadius: '24px'
         },
       }}
     >
