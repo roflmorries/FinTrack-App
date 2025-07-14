@@ -4,7 +4,7 @@ import * as categoryService from '../services/categoryService';
 import * as db from '../utils/db';
 
 export const create = async (req: Request, res: Response) => {
-  const { uid, email, fullName, avatar } = req.body;
+  const { uid, email, fullName, avatar, monthlyBudget } = req.body;
   if (!uid || !email) {
     res.status(400).json({ error: 'Missed required fields' });
     return;
@@ -14,15 +14,15 @@ export const create = async (req: Request, res: Response) => {
     res.status(409).json({error: 'User already exists'});
     return;
   }
-  const user = await userService.createUser({ uid, email, fullName, avatar });
+  const user = await userService.createUser({ uid, email, fullName, avatar, monthlyBudget });
   await categoryService.createDefaultCategoriesForUser(uid);
   res.json(user);
 };
 
 export const update = async (req: Request, res: Response) => {
   const { uid } = req.params;
-  const { email, fullName, avatar } = req.body;
-  const user = await userService.updateUser(uid, { email, fullName, avatar });
+  const { email, fullName, avatar, monthlyBudget } = req.body;
+  const user = await userService.updateUser(uid, { email, fullName, avatar, monthlyBudget });
   if (!user) {
     res.status(404).json({error: 'User not found'});
     return;

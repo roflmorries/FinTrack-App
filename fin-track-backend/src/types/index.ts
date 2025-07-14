@@ -4,7 +4,7 @@ export interface Transaction {
   userId: string;
   type: string;
   amount: number;
-  category: string; // category id
+  category: string;
   date: string;
   comment?: string;
 }
@@ -28,5 +28,6 @@ export interface User {
   uid: string,
   email: string,
   fullName: string,
-  avatar: string
+  avatar: string,
+  monthlyBudget?: number
 }
