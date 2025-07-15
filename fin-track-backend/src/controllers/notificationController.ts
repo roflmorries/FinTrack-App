@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as notificationService from '../services/notificationService';
 
 export const getAll = async (req: Request, res: Response) => {
-  const { userId } = req.user?.uid;
+  const { userId } = req.query as { userId: string };
   if (!userId) {
     res.status(400).json({ error: 'userId is required' });
     return;
@@ -29,7 +29,6 @@ export const create = async (req: Request, res: Response) => {
 export const markAsRead = async (req: Request, res: Response) => {
   const userId = req.user?.uid;
   const { id } = req.params;
-  
   const notifications = await notificationService.getNotificationByUser(userId);
   const notification = notifications.find(n => n.id === id);
   if (!notification) {
