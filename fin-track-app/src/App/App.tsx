@@ -10,6 +10,9 @@ import Loader from '../widgets/Loader/Loader';
 import { fetchTransactions } from '../entities/transactions/model/transactionThunk';
 import { fetchCategories } from '../entities/categories/model/categoryThunk';
 import { fetchGoals } from '../entities/fin-goals/goalThunk';
+import { fetchAllNotifications } from '../entities/notifications/notificationThunk';
+import AlertNotification from '../widgets/Notifications/AlertNotification';
+import { StyledToastContainer } from '../shared/ui/App/app.styled';
 
 function App() {
 
@@ -32,6 +35,7 @@ function App() {
       dispatch(fetchTransactions(user.uid));
       dispatch(fetchCategories(user.uid));
       dispatch(fetchGoals(user.uid));
+      dispatch(fetchAllNotifications(user.uid))
     }
   }, [user])
 
@@ -39,7 +43,20 @@ function App() {
   if (isLoading) return <Loader/>
   return (
     <BrowserRouter>
+      <AlertNotification/>
       <AppRoutes/>
+      <StyledToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </BrowserRouter>
   )
 }
