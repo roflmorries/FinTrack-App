@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Notification } from "./types";
-import axios from "axios";
 import { API_URL } from "../../shared/config/config";
 import { api } from "../../shared/api/axiosWithAuth";
 
