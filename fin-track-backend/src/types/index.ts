@@ -31,3 +31,12 @@ export interface User {
   avatar: string,
   monthlyBudget?: number
 }
+
+export type Notification = {
+  id: string;
+  userId: string;
+  date: string;
+  message: string;
+  severity: "info" | "warning" | "error";
+  read?: boolean;
+};

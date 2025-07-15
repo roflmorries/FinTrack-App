@@ -7,6 +7,7 @@ import goalsRouter from './routes/goals';
 import userRouter from './routes/users';
 import avatarRouter from './routes/avatar';
 import assistantRouter from './routes/ai-assistant';
+import notificationRouter from './routes/notifications'
 import { connectDB } from './config/db/db';
 import helmet from 'helmet';
 
@@ -21,7 +22,8 @@ app.use('/detect-category', detectCategoryRouter);
 app.use('/goals', goalsRouter);
 app.use('/users', userRouter);
 app.use('/avatar', avatarRouter);
-app.use('/ai-assistant', assistantRouter)
+app.use('/ai-assistant', assistantRouter);
+app.use('/notifications', notificationRouter);
 
 const PORT = 3001;
 (async () => {
