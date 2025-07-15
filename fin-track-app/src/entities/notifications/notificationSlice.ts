@@ -12,7 +12,7 @@ const initialState = notificationsAdapter.getInitialState({
 });
 
 const notificationsSlice = createSlice({
-  name: 'notifications',
+  name: 'notification',
   initialState,
   reducers: {},
   extraReducers: builder => {
@@ -32,14 +32,11 @@ const notificationsSlice = createSlice({
 
       .addCase(addNotification.fulfilled, (state, action) => {
         notificationsAdapter.addOne(state, action.payload);
-        state.isLoading = false;
       })
       .addCase(addNotification.pending, state => {
-        state.isLoading = true;
         state.error = null;
       })
       .addCase(addNotification.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || null;
       })
 
@@ -48,27 +45,18 @@ const notificationsSlice = createSlice({
           id: action.payload.id,
           changes: { read: true }
         });
-        state.isLoading = false;
       })
       .addCase(markAsRead.pending, state => {
-        state.isLoading = true;
         state.error = null;
       })
       .addCase(markAsRead.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || null;
       })
 
       .addCase(deleteNotification.fulfilled, (state, action) => {
         notificationsAdapter.removeOne(state, action.payload);
-        state.isLoading = false;
-      })
-      .addCase(deleteNotification.pending, state => {
-        state.isLoading = true;
-        state.error = null;
       })
       .addCase(deleteNotification.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || null;
       })
   }
