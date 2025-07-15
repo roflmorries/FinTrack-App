@@ -1,41 +1,50 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch } from './redux/reduxTypes';
 import { addNotification } from '../../../entities/notifications/notificationThunk';
 
 export function useBudgetNotifications(userId: string | undefined, budget: number | undefined, spent: number) {
   const dispatch = useAppDispatch();
-  const notificationsSent = useRef(new Set<string>());
-
+  
+  const storageKey = `budget-notifications-${userId}-${budget}`;
+  
   useEffect(() => {
-    if (!userId || !budget) return;
     
-    const exceededKey = `budget-exceeded-${userId}-${Date.now()}`;
-    const warningKey = `budget-warning-${userId}-${Date.now()}`;
+    if (!userId || !budget) {
+      return;
+    }
     
-    if (spent > budget && !notificationsSent.current.has('exceeded')) {
+    const savedState = localStorage.getItem(storageKey);
+    const lastState = savedState ? JSON.parse(savedState) : { exceeded: false, warning: false };
+    
+    
+    const isExceeded = spent > budget;
+    const isNearLimit = spent >= budget * 0.9 && spent <= budget;
+    const isSafe = spent < budget * 0.8;
+    
+    if (isSafe && (lastState.exceeded || lastState.warning)) {
+      localStorage.setItem(storageKey, JSON.stringify({ exceeded: false, warning: false }));
+      return;
+    }
+    
+    if (isExceeded && !lastState.exceeded) {
       dispatch(addNotification({
         userId,
         message: "Бюджет превышен!",
         severity: "error",
         read: false,
       }));
-      notificationsSent.current.add('exceeded');
-      notificationsSent.current.delete('warning');
+      localStorage.setItem(storageKey, JSON.stringify({ exceeded: true, warning: false }));
     }
     
-    else if (spent >= budget * 0.9 && spent <= budget && !notificationsSent.current.has('warning')) {
+    else if (isNearLimit && (!lastState.warning || lastState.exceeded)) {
       dispatch(addNotification({
         userId,
         message: "Бюджет почти исчерпан!",
         severity: "warning", 
         read: false,
       }));
-      notificationsSent.current.add('warning');
+      localStorage.setItem(storageKey, JSON.stringify({ exceeded: false, warning: true }));
     }
     
-    if (spent < budget * 0.9) {
-      notificationsSent.current.clear();
-    }
-    
-  }, [userId, budget, spent, dispatch]);
+  }, [userId, budget, spent, dispatch, storageKey]);
 }
