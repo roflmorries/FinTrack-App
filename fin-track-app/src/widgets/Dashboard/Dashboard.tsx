@@ -29,17 +29,7 @@ export default function Dashboard() {
       <BalanceWidget/>
       <PieChartWidget/>
       <MonthlyBudgetWidget/>
-      {/* {goals.map(goal => {
-      const percent = Math.min((goal.progress / goal.amount) * 100, 100);
-      return (
-        <div key={goal.id} className="progress_block">
-          <p>{goal.name}</p>
-          <Progress percent={percent} />
-          <p>{goal.progress} / {goal.amount}</p>
-        </div>
-      );
-    })} */}
-    <GoalsProgressWidget/>
+      <GoalsProgressWidget/>
     </Layout>
   )
 }
