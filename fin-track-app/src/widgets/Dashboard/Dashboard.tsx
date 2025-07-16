@@ -1,17 +1,15 @@
 import styled from "styled-components"
-import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes"
-import { Progress } from "antd";
 import BalanceWidget from "./BalanceWidget/BalanceWidget";
-import { selectActiveGoalsWithProgress } from "../../entities/fin-goals/goalWithProgressSelector";
 import PieChartWidget from "./PieChartWidget/PieChartWidget";
 import MonthlyBudgetWidget from "./MonthlyBudgetWidget/MonthlyBudgetWidget";
+import GoalsProgressWidget from "./GoalsProgressWidget/GoalsProgressWidget";
 
 const Layout = styled.div`
   /* background-color: #141414; */
   height: 96%;
   border-radius: 24px;
   padding: 1px;
-  margin: 20px;
+  /* margin: 20px; */
   * {
     color: white
   }
@@ -25,7 +23,6 @@ const Layout = styled.div`
 `
 
 export default function Dashboard() {
-  const goals = useAppSelector(selectActiveGoalsWithProgress);
 
   return (
     <Layout>
@@ -42,6 +39,7 @@ export default function Dashboard() {
         </div>
       );
     })} */}
+    <GoalsProgressWidget/>
     </Layout>
   )
 }
