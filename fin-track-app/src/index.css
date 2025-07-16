@@ -61,3 +61,25 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+*[class*="Widget"], *[class*="Chart"] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  *[class*="Widget"] {
+    backdrop-filter: none !important;
+    background: rgba(30, 30, 30, 0.98) !important;
+  }
+}
