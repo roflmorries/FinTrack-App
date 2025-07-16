@@ -7,6 +7,7 @@ export interface Transaction {
   category: string;
   date: string;
   comment?: string;
+  goalId?: string;
 }
 
 export interface Category {
