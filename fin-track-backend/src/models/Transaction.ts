@@ -7,7 +7,8 @@ const transactionSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   category: { type: String, required: true },
   date: { type: String, required: true },
-  comment: { type: String},
+  comment: { type: String },
+  goalId: { type: String }
 })
 
 export const TransactionModel = mongoose.model('Transaction', transactionSchema);
