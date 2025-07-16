@@ -148,11 +148,19 @@ const StyledGoalsWidget = styled.div`
 `;
 
 const GoalItem = memo(({ goal }: { goal: any }) => {
-  const percent = useMemo(
-    () => Math.min((goal.progress / goal.amount) * 100, 100),
-    [goal.progress, goal.amount]
-  );
-
+const percent = useMemo(() => {
+  if (!goal.amount || goal.amount === 0) {
+    return 0;
+  }
+  
+  if (!goal.progress && goal.progress !== 0) {
+    return 0;
+  }
+  
+  const calculated = (goal.progress / goal.amount) * 100;
+  
+  return Math.min(calculated, 100);
+}, [goal.progress, goal.amount]);
   return (
     <div className="goal-item">
       <div className="goal-name">
@@ -162,7 +170,7 @@ const GoalItem = memo(({ goal }: { goal: any }) => {
       
       <div className="goal-progress-info">
         <span className="progress-text">
-          {goal.progress.toLocaleString()} / {goal.amount.toLocaleString()} ₽
+          {goal.progress.toLocaleString()} / {goal.amount.toLocaleString()} $
         </span>
         <span className="progress-percentage">
           {Math.round(percent)}%
@@ -177,7 +185,7 @@ const GoalItem = memo(({ goal }: { goal: any }) => {
           '100%': '#22c55e',
         }}
         trailColor="rgba(255, 255, 255, 0.1)"
-        strokeWidth={8}
+        strokeWidth={12} 
       />
     </div>
   );
