@@ -9,8 +9,8 @@ type Props = {}
 
 const WidgetContainer = styled.div`
   width: 100%;
-  min-height: 400px;
-  height: 100vh;
+  min-height: 100%;
+  /* height: 90%; */
 
   will-change: transform;
   contain: layout style paint;
@@ -66,7 +66,6 @@ const WidgetContainer = styled.div`
     margin-bottom: 20px !important;
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
   }
 
   .transactions-container {
@@ -304,10 +303,10 @@ const RecentTransactionsWidget = memo(({}: Props) => {
   const allTransactions = useAppSelector(SelectAllTransactions);
 
   const { recentIncomes, recentExpenses } = useMemo(() => {
-    // Сортируем транзакции по дате (новые сначала)
-    const sortedTransactions = [...allTransactions].sort((a, b) => 
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    // ✅ НЕ мутируй исходный массив
+    const sortedTransactions = allTransactions
+      .slice() // ✅ Создай копию
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     // Берем последние 3 доходные и 3 расходные транзакции
     const recentIncomes = sortedTransactions
