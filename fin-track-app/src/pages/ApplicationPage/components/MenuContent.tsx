@@ -13,6 +13,10 @@ import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
+import Button from '@mui/material/Button';
+import { exportTransactionsToCSV, exportTransactionsToPDF } from '../../../shared/lib/export/exportTransactions';
+import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
+import { SelectAllTransactions } from '../../../entities/transactions/model/transactionsSelectors';
 
 const mainListItems = [
   { text: 'Dashboard', icon: <DashboardCustomizeRoundedIcon />, to: '/dashboard' },
@@ -22,13 +26,8 @@ const mainListItems = [
   { text: 'AI Assistant', icon: <ElectricBoltRoundedIcon />, to: '/dashboard/ai-assistant' },
 ];
 
-const secondaryListItems = [
-  { text: 'Settings', icon: <SettingsRoundedIcon />, to: '/dashboard/settings' },
-  { text: 'About', icon: <InfoRoundedIcon />, to: '/dashboard/about' },
-  { text: 'Feedback', icon: <HelpRoundedIcon />, to: '/dashboard/feedback' },
-];
-
 export default function MenuContent() {
+  const transactions = useAppSelector(SelectAllTransactions)
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
@@ -41,7 +40,7 @@ export default function MenuContent() {
                 display: 'flex',
                 alignItems: 'center',
                 textDecoration: 'none',
-                color: isActive ? 'purple' : 'inherit',
+                color: isActive ? '#803eff' : 'inherit',
                 padding: '8px 16px',
                 borderRadius: '24px',
                 gap: '3%',
@@ -55,16 +54,12 @@ export default function MenuContent() {
           </ListItem>
         ))}
       </List>
-      <List dense>
-        {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      <Stack
+      sx={{alignItems: 'flex-start', p: 1, m: 1, fontSize: '50px'}}
+      >
+            <Button onClick={() => exportTransactionsToCSV(transactions)}>Export transactions to CSV</Button>
+            <Button onClick={() => exportTransactionsToPDF(transactions)}>Export transactions to PDF</Button>
+      </Stack>
     </Stack>
   );
 }

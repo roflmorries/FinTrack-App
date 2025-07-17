@@ -1,22 +1,14 @@
-import styled from "styled-components"
 import GoalForm from "../../features/goals/GoalForm"
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import GoalsList from "../../features/goals/GoalsList";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
-// import { deleteGoal } from "../../entities/fin-goals/goalSlice";
-import { Button, Modal } from "antd";
 import { deleteGoal } from "../../entities/fin-goals/goalThunk";
+import { Close } from "@mui/icons-material";
+import { Layout, CreateButton, StyledDialog, StyledDialogTitle, StyledIconButton, StyledDialogContent } from "../../shared/ui/Goals/GoalPage.styled";
 
 type Props = {}
 
-const Layout = styled.div`
-  background-color: #141414;
-  height: 96%;
-  border-radius: 24px;
-  padding: 1px;
-  margin: 20px;
-`
 
 export default function GoalsPage({}: Props) {
   const dispatch = useAppDispatch();
@@ -37,32 +29,53 @@ export default function GoalsPage({}: Props) {
   const handleCloseModal = () => {
     setIsEditModalShown(false)
     setIsNewModalShown(false)
+    setEditGoalId(null)
   }
 
   return (
     <Layout>
-      <div>GoalsPage</div>
-      <Button type="primary" onClick={() => setIsNewModalShown(true)}>Create new Goal</Button>
-      <Modal
-      title='new form'
-      open={isNewModalShown}
-      onCancel={handleCloseModal}
-      destroyOnClose // mb delete
-      footer={null}
+      <CreateButton 
+        variant="outlined" 
+        onClick={() => setIsNewModalShown(true)}
       >
-        <GoalForm onSave={handleCloseModal}/>
-      </Modal>
+        Create New Goal
+      </CreateButton>
+
+      <StyledDialog
+        open={isNewModalShown}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
+      >
+        <StyledDialogTitle>
+          Create New Goal
+          <StyledIconButton onClick={handleCloseModal}>
+            <Close />
+          </StyledIconButton>
+        </StyledDialogTitle>
+        <StyledDialogContent>
+          <GoalForm onSave={handleCloseModal}/>
+        </StyledDialogContent>
+      </StyledDialog>
+
       <GoalsList items={data} onEdit={handleGoalEdit} onDelete={handleGoalDelete}/>
 
-      <Modal
-      title='edit form'
-      open={isEditModalShown}
-      onCancel={handleCloseModal}
-      destroyOnClose // mb delete
-      footer={null}
+      <StyledDialog
+        open={isEditModalShown}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
       >
-        <GoalForm goalId={editGoalId ?? undefined} onSave={handleCloseModal}/>
-      </Modal>
+        <StyledDialogTitle>
+          Edit Goal
+          <StyledIconButton onClick={handleCloseModal}>
+            <Close />
+          </StyledIconButton>
+        </StyledDialogTitle>
+        <StyledDialogContent>
+          <GoalForm goalId={editGoalId ?? undefined} onSave={handleCloseModal}/>
+        </StyledDialogContent>
+      </StyledDialog>
     </Layout>
   )
 }

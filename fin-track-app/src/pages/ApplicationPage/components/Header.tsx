@@ -4,6 +4,7 @@ import CustomDatePicker from './CustomDatePicker';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '../../../shared/shared-theme/ColorModeIconDropdown';
+import UserInfo from './UserInfo';
 
 export default function Header() {
   return (
@@ -15,7 +16,8 @@ export default function Header() {
         alignItems: { xs: 'flex-start', md: 'center' },
         justifyContent: 'space-between',
         maxWidth: { sm: '100%', md: '1700px' },
-        pt: 1.5,
+        pt: 2.5,
+        pb: 1
       }}
       spacing={2}
     >
@@ -26,6 +28,7 @@ export default function Header() {
           <NotificationsRoundedIcon />
         </MenuButton>
         <ColorModeIconDropdown />
+        <UserInfo/>
       </Stack>
     </Stack>
   );

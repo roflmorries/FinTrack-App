@@ -53,13 +53,12 @@ export default function Dashboard() {
           }}>
             <BalanceWidget/>
             <PieChartWidget/>
-            <MonthlyBudgetWidget/>
-            <GoalsProgressWidget/>
           </Box>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Box title="Future Content 1" height="100%" sx={{backgroundColor: 'grey'}}/>
+            <MonthlyBudgetWidget/>
+            <GoalsProgressWidget/>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
