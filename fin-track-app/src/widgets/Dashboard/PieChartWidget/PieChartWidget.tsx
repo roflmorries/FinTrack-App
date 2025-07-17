@@ -123,17 +123,34 @@ const MemoizedTooltip = memo(() => (
 
 const PieChartWidget = memo(() => {
   const data = useAppSelector(selectExpensesByCategory);
-  const hasData = useMemo(() => data.length > 0, [data.length]);
   
+  const hasData = useMemo(() => {
+    const result = data && Array.isArray(data) && data.length > 0;
+    return result;
+  }, [data]);
+
   return (
     <WidgetContainer>
       <div className="widget-content">
         <h3 className="chart-title">📊 Categories</h3>
         
         {hasData ? (
-          <ResponsiveContainer height={300}>
-            <PieChart>
-              <MemoizedPie data={data} />
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart width={300} height={300}>
+              <Pie
+                data={data}
+                dataKey='value'
+                nameKey='name'
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={90}
+                stroke='none'
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color}/>
+                ))}
+              </Pie>
               <text
                 x="50%"
                 y="50%"
@@ -160,6 +177,8 @@ const PieChartWidget = memo(() => {
     </WidgetContainer>
   );
 });
+
+
 
 PieChartWidget.displayName = 'PieChartWidget';
 
