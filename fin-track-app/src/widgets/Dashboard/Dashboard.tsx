@@ -5,6 +5,7 @@ import MonthlyBudgetWidget from "./MonthlyBudgetWidget/MonthlyBudgetWidget";
 import GoalsProgressWidget from "./GoalsProgressWidget/GoalsProgressWidget";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import RecentTransactionsWidget from "./RecentTransactionsWidget/RecentTransactionsWidget";
 
 const Layout = styled.div`
   /* background-color: #141414; */
@@ -62,7 +63,7 @@ export default function Dashboard() {
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Box title="Future Content 2" height="100%" sx={{backgroundColor: 'grey'}}/>
+          <RecentTransactionsWidget/>
         </Grid>
       </Grid>
     </Box>
