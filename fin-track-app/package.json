@@ -56,6 +56,7 @@
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "lodash": "^4.17.21",
+    "mui-color-input": "^7.0.0",
     "openai": "^5.0.1",
     "react-hook-form": "^7.60.0",
     "react-i18next": "^15.5.2",
