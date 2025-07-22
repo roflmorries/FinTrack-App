@@ -1,4 +1,4 @@
-import { Progress } from "antd";
+import { LinearProgress } from '@mui/material';
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
 import { selectActiveGoalsWithProgress } from '../../../entities/fin-goals/goalWithProgressSelector';
 import styled from 'styled-components';
@@ -177,15 +177,18 @@ const percent = useMemo(() => {
         </span>
       </div>
       
-      <Progress 
-        percent={percent} 
-        showInfo={false}
-        strokeColor={{
-          '0%': '#4ade80',
-          '100%': '#22c55e',
+      <LinearProgress 
+        variant="determinate" 
+        value={percent}
+        sx={{
+          height: 12,
+          borderRadius: 8,
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          '& .MuiLinearProgress-bar': {
+            borderRadius: 8,
+            background: 'linear-gradient(90deg, #4ade80, #22c55e)',
+          },
         }}
-        trailColor="rgba(255, 255, 255, 0.1)"
-        strokeWidth={12} 
       />
     </div>
   );

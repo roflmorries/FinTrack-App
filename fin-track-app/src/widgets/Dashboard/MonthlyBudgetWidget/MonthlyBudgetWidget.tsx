@@ -2,7 +2,7 @@ import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes'
 import { selectMonthlyBudget } from '../../../entities/user/selectors/selectMonthlyBudget'
 import MonthlyBudgetForm from '../../../features/auth/ui/MonthlyBudgetForm';
 import { selectMonthlyExpenses } from '../../../entities/user/selectors/selectMonthlyExpenses';
-import { Typography } from 'antd';
+import { Typography } from '@mui/material';
 import { PieChart, Pie, Cell } from 'recharts';
 import { memo, useMemo, useCallback, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
