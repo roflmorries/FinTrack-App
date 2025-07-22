@@ -1,64 +1,88 @@
-import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
 import { useState } from "react";
 import CategoriesList from "../../features/categories/CategoriesList";
-import { Button, Modal } from "antd";
 import CategoryForm from "../../features/categories/CategoryForm";
 import { deleteCategory } from "../../entities/categories/model/categoryThunk";
+import { Close } from "@mui/icons-material";
+import { Layout, PageTitle, CreateButton, StyledDialog, StyledDialogTitle, StyledIconButton, StyledDialogContent } from "../../shared/ui/Category/categoryPage.styled";
 
-const Layout = styled.div`
-  background-color: #141414;
-  height: 96%;
-  border-radius: 24px;
-  padding: 1px;
-  margin: 20px;
-`
 
 export default function CategoriesPage() {
   const data = useAppSelector(selectAllCategories)
   const dispatch = useAppDispatch();
-  // const [isAddFormShown, setIsAddFormShown] = useState(false);
   const [isEditModalShown, setIsEditModalShown] = useState(false);
   const [isNewModalShown, setIsNewModalShown] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
 
-  const handleTransactionEdit = (categoryId: string) => {
+  const handleCategoryEdit = (categoryId: string) => {
     setIsEditModalShown(true)
     setEditCategoryId(categoryId)
   }
 
-  const handleTransactionDelete = async (categoryId: string) => {
+  const handleCategoryDelete = async (categoryId: string) => {
     await dispatch(deleteCategory(categoryId));
   }
 
   const handleCloseModal = () => {
     setIsEditModalShown(false)
     setIsNewModalShown(false)
+    setEditCategoryId(null)
   }
 
   return (
     <Layout>
-      <div>TransactionPage</div>
-      <Button type="primary" onClick={() => setIsNewModalShown(true)}>Create new category</Button>
-      <Modal
-      open={isNewModalShown}
-      onCancel={handleCloseModal}
-      destroyOnClose // mb delete
-      footer={null}
+      <PageTitle>Categories</PageTitle>
+      
+      <CreateButton 
+        variant="outlined" 
+        onClick={() => setIsNewModalShown(true)}
       >
-        <CategoryForm onSave={handleCloseModal}/>
-      </Modal>
-      <CategoriesList items={data} onEdit={handleTransactionEdit} onDelete={handleTransactionDelete}/>
-      <Modal
-      title='edit form'
-      open={isEditModalShown}
-      onCancel={handleCloseModal}
-      destroyOnClose // mb delete
-      footer={null}
+        🏷️ Create New Category
+      </CreateButton>
+      
+      <StyledDialog
+        open={isNewModalShown}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
       >
-        <CategoryForm categoryId={editCategoryId ?? undefined} onSave={handleCloseModal}/>
-      </Modal>
+        <StyledDialogTitle>
+          Create New Category
+          <StyledIconButton onClick={handleCloseModal}>
+            <Close />
+          </StyledIconButton>
+        </StyledDialogTitle>
+        <StyledDialogContent>
+          <CategoryForm onSave={handleCloseModal}/>
+        </StyledDialogContent>
+      </StyledDialog>
+
+      <CategoriesList 
+        items={data} 
+        onEdit={handleCategoryEdit} 
+        onDelete={handleCategoryDelete}
+      />
+
+      <StyledDialog
+        open={isEditModalShown}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
+      >
+        <StyledDialogTitle>
+          Edit Category
+          <StyledIconButton onClick={handleCloseModal}>
+            <Close />
+          </StyledIconButton>
+        </StyledDialogTitle>
+        <StyledDialogContent>
+          <CategoryForm 
+            categoryId={editCategoryId ?? undefined} 
+            onSave={handleCloseModal}
+          />
+        </StyledDialogContent>
+      </StyledDialog>
     </Layout>
   )
 }
