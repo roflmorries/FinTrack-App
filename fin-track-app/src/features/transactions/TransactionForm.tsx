@@ -1,7 +1,5 @@
-import { Button, DatePicker, Form, Input, Radio, Select } from "antd";
-import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
 import { createTransaction, updateTransaction } from "../../entities/transactions/model/transactionThunk";
 import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
@@ -10,171 +8,322 @@ import { debounce } from 'lodash';
 import axios from "axios";
 import { API_URL } from "../../shared/config/config";
 import { fetchCategories } from "../../entities/categories/model/categoryThunk";
-
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import dayjs from "dayjs";
+import {
+  MenuItem,
+  Select,
+  InputLabel,
+  FormHelperText,
+  ToggleButton,
+} from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AutoAwesome } from '@mui/icons-material';
+import { transactionSchema } from './validation/transactionSchema';
+import { StyledForm, TypeFieldContainer, TypeLabel, StyledToggleButtonGroup, StyledTextField, StyledFormControl, AutoDetectIndicator, SubmitButton } from '../../shared/ui/Transaction/transactionForm.styled';
 
 interface TransactionFormProps {
   onSave: () => void;
   transactionId?: string;
 }
 
+type TransactionFormData = yup.InferType<typeof transactionSchema>;
+
+
 export default function TransactionForm({ onSave, transactionId }: TransactionFormProps) {
   const categories = useAppSelector(selectAllCategories);
-  const userId = useAppSelector(state => state.user.currentUser?.uid)
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
   const dispatch = useAppDispatch();
-  const currentTransaction = useAppSelector(state => transactionId ? SelectTransactionById(state, transactionId) : undefined);
-  const [form] = Form.useForm();
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const currentTransaction = useAppSelector(state => 
+    transactionId ? SelectTransactionById(state, transactionId) : undefined
+  );
   const goals = useAppSelector(selectAllGoals);
-  const [autoDetectCategory, setAutoDetectCategory] = useState<string | null>(null);
+  const [showAutoDetect, setShowAutoDetect] = useState(false);
+  const [detectedCategory, setDetectedCategory] = useState('');
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting }
+  } = useForm<TransactionFormData>({
+    resolver: yupResolver(transactionSchema),
+    defaultValues: {
+      type: 'expense',
+      amount: 0,
+      category: '',
+      date: dayjs().toDate(),
+      comment: '',
+      goalId: ''
+    }
+  });
+
+  const watchedCategory = watch('category');
 
   useEffect(() => {
     if (transactionId && currentTransaction) {
-      setSelectedCategory(currentTransaction.category);
-      form.setFieldsValue({
-        type: currentTransaction.type,
+      reset({
+        type: currentTransaction.type as 'income' | 'expense',
         amount: currentTransaction.amount,
         category: currentTransaction.category,
-        date: dayjs(currentTransaction.date),
-        comment: currentTransaction.comment
+        date: dayjs(currentTransaction.date).toDate(),
+        comment: currentTransaction.comment || '',
+        goalId: currentTransaction.goalId || ''
       });
     } else {
-      form.resetFields();
+      reset({
+        type: 'expense',
+        amount: 0,
+        category: '',
+        date: dayjs().toDate(),
+        comment: '',
+        goalId: ''
+      });
     }
-  }, [transactionId, currentTransaction, form]);
+  }, [transactionId, currentTransaction, reset]);
 
+  const detectCategory = useCallback(
+    debounce(async (comment: string) => {
+      if (!comment || !userId) return;
 
-  const handleTransactionForm = async (values: any) => {
+      try {
+        const { data } = await axios.post<{ category: string }>(
+          `${API_URL}/detect-category`,
+          { description: comment, userId }
+        );
+        
+        if (data.category) {
+          setValue('category', data.category);
+          setDetectedCategory(data.category);
+          setShowAutoDetect(true);
+          
+          setTimeout(() => {
+            setShowAutoDetect(false);
+          }, 3000);
+          
+          dispatch(fetchCategories(userId));
+        }
+      } catch (error) {
+        console.error('Error detecting category:', error);
+      }
+    }, 400),
+    [userId, setValue, dispatch]
+  );
+
+  const categoryOptions = useMemo(() => 
+    categories.map(category => ({ 
+      value: category.name, 
+      label: category.name 
+    })), 
+    [categories]
+  );
+
+  const goalOptions = useMemo(() => 
+    goals.map(goal => ({ 
+      value: goal.id, 
+      label: goal.name 
+    })), 
+    [goals]
+  );
+
+  const onSubmit = async (data: TransactionFormData) => {
     if (!userId) return;
 
     const transactionData = {
       userId,
-      ...values,
-      date: values.date ? dayjs(values.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"),
-      amount: Number(values.amount)
+      type: data.type,
+      amount: data.amount,
+      category: data.category,
+      date: dayjs(data.date).format("YYYY-MM-DD"),
+      ...(data.comment && data.comment.trim() && { comment: data.comment.trim() }),
+      ...(data.goalId && { goalId: data.goalId })
     };
 
-    await dispatch(createTransaction(transactionData))
-
-    form.resetFields();
-
-    if (onSave) onSave();
-  }
-
-  const handleTransactionEdit = async (values: any) => {
-    if (!transactionId) return;
-
-    const updatedransaction = {
-      id: transactionId,
-      changes: {
-        userId,
-        ...values,
-        date: values.date ? dayjs(values.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"),
-        amount: Number(values.amount)
-      }
-    }
-    
-    await dispatch(updateTransaction(updatedransaction))
-    onSave();
-  }
-
-  const detectCategory = debounce(async (comment: string) => {
-    if (!comment || !userId) return;
-
     try {
-      const { data } = await axios.post<{ category: string }>(`${API_URL}/detect-category`,
-        { description: comment, userId }
-      );
-      if (data.category) {
-        setSelectedCategory(data.category);
-        setAutoDetectCategory(data.category)
-        form.setFieldValue('category', data.category)
-        dispatch(fetchCategories(userId))
-      };
+      if (transactionId) {
+        const updatedTransaction = {
+          id: transactionId,
+          changes: transactionData
+        };
+        await dispatch(updateTransaction(updatedTransaction));
+      } else {
+        await dispatch(createTransaction(transactionData));
+      }
+
+      onSave();
     } catch (error) {
-      console.error(error);
+      console.error('Error saving transaction:', error);
     }
-  }, 400);
-
-  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    detectCategory(event.target.value);
-    setAutoDetectCategory(null);
-  }
-
-  const handleChangeCategory = (value: string) => {
-    setSelectedCategory(value);
-    setAutoDetectCategory(null);
-  }
+  };
 
   return (
-    <Form
-    layout="vertical"
-    onFinish={!transactionId ? handleTransactionForm : handleTransactionEdit}
-    form={form}
-    >
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <StyledForm as="form" onSubmit={handleSubmit(onSubmit)}>
+        <TypeFieldContainer>
+          <TypeLabel>Transaction Type</TypeLabel>
+          <Controller
+            name="type"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <StyledToggleButtonGroup
+                value={value}
+                exclusive
+                onChange={(_, newValue) => {
+                  if (newValue !== null) {
+                    onChange(newValue);
+                  }
+                }}
+              >
+                <ToggleButton value="income">
+                  💰 Income
+                </ToggleButton>
+                <ToggleButton value="expense">
+                  💸 Expense
+                </ToggleButton>
+              </StyledToggleButtonGroup>
+            )}
+          />
+          {errors.type && (
+            <FormHelperText error>{errors.type.message}</FormHelperText>
+          )}
+        </TypeFieldContainer>
 
-      <Form.Item
-      name='type'
-      label='Type'
-      initialValue='expense'
-      rules={[{ required: true }]}
-      >
-        <Radio.Group>
-          <Radio.Button value='income'>Income</Radio.Button>
-          <Radio.Button value='expense'>Expense</Radio.Button>
-        </Radio.Group>
-      </Form.Item>
-
-      <Form.Item
-      name='amount'
-      label='Amount'
-      rules={[{ required: true }]}
-      >
-        <Input type="number" min={0.01} step={0.01}/>
-      </Form.Item>
-
-      <Form.Item
-      name='category'
-      label='Category'
-      rules={[{ required: true }]}
-      extra={autoDetectCategory ? 'Категория автоматически определена' : undefined}
-      >
-        <Select
-        options={categories.map(category => ({ value: category.name, label: category.name }))}
-        onChange={handleChangeCategory}
+        <Controller
+          name="amount"
+          control={control}
+          render={({ field: { onChange, value, ...field } }) => (
+            <StyledTextField
+              {...field}
+              label="Amount"
+              type="number"
+              value={value || ''}
+              onChange={(e) => onChange(Number(e.target.value))}
+              error={!!errors.amount}
+              helperText={errors.amount?.message}
+              fullWidth
+              variant="outlined"
+              placeholder="0.00"
+              inputProps={{
+                min: 0.01,
+                step: 0.01
+              }}
+            />
+          )}
         />
-      </Form.Item>
 
-      <Form.Item
-      name='date'
-      label='Date'
-      rules={[{ required: true }]}
-      initialValue={transactionId && currentTransaction ? dayjs(currentTransaction?.date) : dayjs()}
-      >
-        <DatePicker/>
-      </Form.Item>
-
-      <Form.Item
-      name='comment'
-      label='Comment'
-      >
-        <Input onChange={handleCommentChange}/>
-      </Form.Item>
-
-      {selectedCategory === 'Goals' && (
-      <Form.Item
-      name='goalId'
-      label='Goal'
-      >
-        <Select
-        placeholder='Выберите цель'
-        options={goals.map(goal => ({value: goal.id, label: goal.name}))}
-        allowClear
+        <Controller
+          name="category"
+          control={control}
+          render={({ field }) => (
+            <StyledFormControl fullWidth error={!!errors.category}>
+              <InputLabel>Category</InputLabel>
+              <Select {...field} label="Category">
+                {categoryOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.category && (
+                <FormHelperText error>{errors.category.message}</FormHelperText>
+              )}
+            </StyledFormControl>
+          )}
         />
-      </Form.Item>
-      )}
+        
+        <AutoDetectIndicator $show={showAutoDetect}>
+          <AutoAwesome />
+          <span>Auto-Detected Category</span>
+        </AutoDetectIndicator>
 
-      <Button htmlType="submit" type="primary">Save</Button>
+        <Controller
+          name="date"
+          control={control}
+          render={({ field: { onChange, value, ...field } }) => (
+            <StyledTextField
+              {...field}
+              label="Date"
+              type="date"
+              value={value ? dayjs(value).format('YYYY-MM-DD') : ''}
+              onChange={(e) => onChange(new Date(e.target.value))}
+              error={!!errors.date}
+              helperText={errors.date?.message}
+              fullWidth
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                max: dayjs().format('YYYY-MM-DD')
+              }}
+            />
+          )}
+        />
 
-    </Form>
-  )
+        <Controller
+          name="comment"
+          control={control}
+          render={({ field }) => (
+            <StyledTextField
+              {...field}
+              label="Comment"
+              error={!!errors.comment}
+              helperText={errors.comment?.message || "💡 Describe your transaction for AI category detection"}
+              fullWidth
+              variant="outlined"
+              placeholder="Coffee at Starbucks, Car Payments etc "
+              multiline
+              rows={2}
+              className="multiline"
+              onChange={(e) => {
+                field.onChange(e);
+                detectCategory(e.target.value);
+              }}
+            />
+          )}
+        />
+
+        {watchedCategory === 'Goals' && (
+          <>
+            <Controller
+              name="goalId"
+              control={control}
+              render={({ field }) => (
+                <StyledFormControl fullWidth error={!!errors.goalId}>
+                  <InputLabel>Goal</InputLabel>
+                  <Select {...field} label="Goal">
+                    {goalOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.goalId && (
+                    <FormHelperText error>{errors.goalId.message}</FormHelperText>
+                  )}
+                </StyledFormControl>
+              )}
+            />
+          </>
+        )}
+
+        <SubmitButton
+          type="submit"
+          variant="outlined"
+          fullWidth
+          disabled={!userId || isSubmitting}
+        >
+          {isSubmitting 
+            ? 'Saving...' 
+            : transactionId 
+              ? 'Update Transaction' 
+              : 'Create Transaction'
+          }
+        </SubmitButton>
+      </StyledForm>
+    </LocalizationProvider>
+  );
 }

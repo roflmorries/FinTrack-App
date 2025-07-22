@@ -1,88 +1,135 @@
-import { Button, Form, Input, ColorPicker } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { useEffect } from 'react';
 import { selectCategoryById } from '../../entities/categories/model/categorySelectors';
 import { createCategory, updateCategory } from '../../entities/categories/model/categoryThunk';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { 
+  FormLabel,
+  FormHelperText
+} from '@mui/material';
+import { categorySchema, CategoryFormData } from './validation/categorySchema';
+import { StyledForm, StyledTextField, StyledFormControl, StyledColorInput, SubmitButton } from '../../shared/ui/Category/categoryForm.styled';
 
 type CategoryFormProps = {
   onSave: () => void;
-  categoryId?: string
+  categoryId?: string;
 }
 
+
 export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) {
-  const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const userId = useAppSelector(state => state.user.currentUser?.uid);
   const currentCategory = useAppSelector(state => categoryId ? selectCategoryById(state, categoryId) : undefined);
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm<CategoryFormData>({
+    resolver: yupResolver(categorySchema),
+    defaultValues: {
+      name: '',
+      color: '#3b82f6'
+    }
+  });
 
   useEffect(() => {
     if (categoryId && currentCategory) {
-      form.setFieldsValue({
+      reset({
         name: currentCategory.name,
         color: currentCategory.color
       });
     } else {
-      form.resetFields();
+      reset({
+        name: '',
+        color: '#3b82f6'
+      });
     }
-  }, [categoryId, currentCategory, form]);
+  }, [categoryId, currentCategory, reset]);
 
-  const handleSaveCategory = async (values: {name: string, color: string}) => {
+  const onSubmit = async (data: CategoryFormData) => {
     if (!userId) return;
 
-    const newCategory = {
-      userId,
-      name: values.name,
-      color: values.color
-    }
-    console.log(newCategory)
+    const categoryData = {
+      name: data.name.trim(),
+      color: data.color
+    };
 
-    await dispatch(createCategory(newCategory));
-
-    form.resetFields()
-    onSave()
-  }
-
-  const handleEditCategory = async (values: {name: string, color: string}) => {
-    if (!categoryId) return;
-
-    const updatedCategory = {
-      id: categoryId,
-      userId,
-      changes: {
-        name: values.name,
-        color: values.color
+    try {
+      if (categoryId) {
+        const updatedCategory = {
+          id: categoryId,
+          userId,
+          changes: categoryData
+        };
+        await dispatch(updateCategory(updatedCategory));
+      } else {
+        const newCategory = {
+          userId,
+          ...categoryData
+        };
+        await dispatch(createCategory(newCategory));
       }
-    }
 
-    await dispatch(updateCategory(updatedCategory))
-    onSave();
-  }
+      onSave();
+    } catch (error) {
+      console.error('Error saving category:', error);
+    }
+  };
 
   return (
-    <Form
-    onFinish={!categoryId ? handleSaveCategory : handleEditCategory}
-    form={form}
-    layout='vertical'
-    >
-      <Form.Item
-      name='name'
-      label='Category name'
-      rules={[{ required: true, message: 'Please enter category name' }]}
-      >
-        <Input placeholder='Enter category name'/>
-      </Form.Item>
+    <StyledForm as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="name"
+        control={control}
+        render={({ field }) => (
+          <StyledTextField
+            {...field}
+            label="Category Name"
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            fullWidth
+            variant="outlined"
+            placeholder="Enter category name"
+          />
+        )}
+      />
 
-      <Form.Item
-      name='color'
-      label='Color'
-      rules={[{ required: true, message: 'Please choose category color' }]}
-      getValueFromEvent={color => color.toHexString()}
+      <Controller
+        name="color"
+        control={control}
+        render={({ field }) => (
+          <StyledFormControl fullWidth error={!!errors.color}>
+            <FormLabel component="legend">Color</FormLabel>
+            <StyledColorInput
+              {...field}
+              format="hex"
+              fallbackValue="#3b82f6"
+              error={!!errors.color}
+              fullWidth
+            />
+            {errors.color && (
+              <FormHelperText>{errors.color.message}</FormHelperText>
+            )}
+          </StyledFormControl>
+        )}
+      />
+
+      <SubmitButton
+        type="submit"
+        variant="outlined"
+        fullWidth
+        disabled={!userId || isSubmitting}
       >
-        <ColorPicker format='hex'/>
-      </Form.Item>
-      
-      <Button type='primary' htmlType='submit'>Save</Button>
-    </Form>
-  )
+        {isSubmitting 
+          ? 'Saving...' 
+          : categoryId 
+            ? 'Update Category' 
+            : 'Create Category'
+        }
+      </SubmitButton>
+    </StyledForm>
+  );
 }
