@@ -20,8 +20,7 @@ const Layout = styled.div`
     width: 250px;
     height: 200px;
     /* background-color: #262626; */
-    border-radius: 17px;
-    margin-left: 50px;
+    border-radius: 24px;
   }
 `
 
@@ -52,13 +51,20 @@ export default function Dashboard() {
             pr: 1
           }}>
             <BalanceWidget/>
-            <PieChartWidget/>
+            <GoalsProgressWidget/>
           </Box>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: 2,
+            pr: 1
+          }}>
+            <PieChartWidget/>
             <MonthlyBudgetWidget/>
-            <GoalsProgressWidget/>
+          </Box>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
