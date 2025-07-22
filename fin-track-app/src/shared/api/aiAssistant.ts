@@ -9,6 +9,7 @@ interface AskAssistantParams {
   goalsReserved: number;
   balanceHistory: any[];
   user: string;
+  budget: number
 }
 
 interface AskAssistantResponse {
@@ -23,10 +24,11 @@ export const askAssistant = async ({
   freeBalance,
   goalsReserved,
   balanceHistory,
-  user
+  user,
+  budget
 }: AskAssistantParams) => {
   const res = await axios.post<AskAssistantResponse>("http://localhost:3001/ai-assistant",
-    { question, transactions, balance, freeBalance, goalsReserved, balanceHistory, user },
+    { question, transactions, balance, freeBalance, goalsReserved, balanceHistory, user, budget },
     { headers: { "Content-Type": "application/json" }}
   );
   console.log(res.data)
