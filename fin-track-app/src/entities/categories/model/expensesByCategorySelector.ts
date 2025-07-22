@@ -6,16 +6,24 @@ import { SelectAllTransactions } from "../../transactions/model/transactionsSele
 export const selectExpensesByCategory = createSelector(
   [SelectAllTransactions, selectAllCategories],
   (transactions, categories) => {
+
     const expenses = transactions.filter(tx => tx.type === 'expense');
-    return categories.map(category => {
-      const value = expenses
-        .filter(tx => tx.category === category.name)
-        .reduce((sum, tx) => sum + tx.amount, 0);
-        return {
-          name: category.name,
-          value,
-          color: category.color
-        };
-    }).filter(item => item.value > 0)
+    
+    const expensesByCategory = expenses.reduce((acc, tx) => {
+      const category = tx.category || 'Other';
+      acc[category] = (acc[category] || 0) + Number(tx.amount);
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const result = Object.entries(expensesByCategory).map(([name, value]) => {
+      const categoryData = categories.find(cat => cat.name === name);
+      return {
+        name,
+        value,
+        color: categoryData?.color || '#888888'
+      };
+    });
+    
+    return result;
   }
-)
+);
