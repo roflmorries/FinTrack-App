@@ -1,81 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { SelectAllTransactions } from '../../entities/transactions/model/transactionsSelectors';
-import { Input, Spin, Button } from 'antd';
+import { CircularProgress } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import { askAssistant } from '../../shared/api/aiAssistant';
-import styled from 'styled-components';
 import { selectBalance, selectBalanceHistory, selectFreeBalance, selectGoalsReserved } from '../../entities/transactions/model/selectBalance';
+import { ChatContainer, EmptyState, InputContainer, LoadingContainer, MessageBubble, MessageRow, SendButton, StyledContainer, StyledTextField } from '../../shared/ui/Assistant/AssistantChat.styled';
+import { selectMonthlyBudget } from '../../entities/user/selectors/selectMonthlyBudget';
 
-const StyledContainer = styled.div`
-  width: 90%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-self: center;
-  justify-content: space-between;
-`
-
-const ChatContainer = styled.div`
-  padding: 16px;
-  border-radius: 12px;
-  min-height: 75%;
-  max-height: 75%;
-  overflow: scroll;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-self: center;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 8px;
-    border: none;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-    border: none;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background: none;
-  }
-`;
-
-const MessageRow = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isUser'
-})<{ isUser: boolean }>`
-  display: flex;
-  justify-content: ${props => (props.isUser ? 'flex-end' : 'flex-start')};
-  margin-bottom: 8px;
-`;
-
-const MessageBubble = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isUser'
-})<{ isUser: boolean }>`
-  background: ${props => (props.isUser ? '#0057b8' : '#222')};
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 18px;
-  max-width: 70%;
-  word-break: break-word;
-  font-size: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-`;
-
-const ToolsContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  textarea {
-    width: 500px;
-    height: 20px;
-  }
-`
 
 type Message = { role: 'user' | 'assistant', content: string }
 
@@ -91,6 +23,7 @@ export default function AiAssistantChat() {
   const balanceGoalReserved = useAppSelector(selectGoalsReserved)
   const balanceHistory = useAppSelector(selectBalanceHistory)
   const user = useAppSelector(state => state.user.currentUser?.fullName) || ''
+  const budget = useAppSelector(selectMonthlyBudget);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -111,41 +44,77 @@ export default function AiAssistantChat() {
         freeBalance,
         goalsReserved: balanceGoalReserved,
         balanceHistory,
-        user
-    })
+        user,
+        budget
+      })
       setMessage((prev: Message[]) => [...prev, { role: "assistant", content: aiReply || "AI не ответил" }]);
     } catch (error: any) {
-        if (error?.response?.status === 429) {
-          setMessage(prev => [...prev, { role: "assistant", content: "Лимит запросов исчерпан, попробуйте позже" }]);
-        } else {
-          setMessage((prev: Message[]) => [...prev, { role: "assistant", content: "Ошибка соединения" }]);
-        }
+      if (error?.response?.status === 429) {
+        setMessage(prev => [...prev, { role: "assistant", content: "Лимит запросов исчерпан, попробуйте позже" }]);
+      } else {
+        setMessage((prev: Message[]) => [...prev, { role: "assistant", content: "Ошибка соединения" }]);
+      }
     }
     setLoading(false)
   }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <StyledContainer>
-    <ChatContainer>
-      {messages.map((message, index) => (
-        <MessageRow key={index} isUser={message.role === 'user'}>
-          <MessageBubble isUser={message.role === 'user'}>
-            {message.content}
-          </MessageBubble>
-        </MessageRow>
-      ))}
-      <div ref={chatEndRef} />
-      {loading && <Spin/>}
-    </ChatContainer>
-    <ToolsContainer>
-    <Input.TextArea
-    value={input}
-    onChange={e => setInput(e.target.value)}
-    onPressEnter={e => { e.preventDefault(); sendMessage(); }}
-    placeholder='Задай вопрос'
-    disabled={loading}
-    />
-    <Button type="primary" onClick={sendMessage} disabled={loading || !input.trim()}>Отправить</Button>
-    </ToolsContainer>
+      
+      <ChatContainer>
+        {messages.length === 0 ? (
+          <EmptyState>
+            <div className="emoji">💬</div>
+            <div className="title">Hello there!</div>
+            <div className="subtitle">
+              Ask a question about your finances, transactions, or give budgeting tips.
+            </div>
+          </EmptyState>
+        ) : (
+          messages.map((message, index) => (
+            <MessageRow key={index} $isUser={message.role === 'user'}>
+              <MessageBubble $isUser={message.role === 'user'}>
+                {message.content}
+              </MessageBubble>
+            </MessageRow>
+          ))
+        )}
+        
+        {loading && (
+          <LoadingContainer>
+            <CircularProgress size={20} />
+            <span>AI думает...</span>
+          </LoadingContainer>
+        )}
+        
+        <div ref={chatEndRef} />
+      </ChatContainer>
+      
+      <InputContainer>
+        <StyledTextField
+          multiline
+          maxRows={4}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Задайте вопрос о ваших финансах..."
+          disabled={loading}
+          variant="outlined"
+        />
+        <SendButton
+          onClick={sendMessage}
+          disabled={loading || !input.trim()}
+        >
+          <SendIcon />
+        </SendButton>
+      </InputContainer>
     </StyledContainer>
   )
 }
