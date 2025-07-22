@@ -16,8 +16,7 @@ const AiAssistantChat = lazy(() => import ("../../features/ai-assistant/AiAssist
 
 export default function AssistantPage() {
   return (
-    <Box sx={{ width: '100%', height: '100%' }}>
-      <p>AI</p>
+    <Box sx={{ width: '100%', height: '91vh' }}>
       <Suspense fallback={<div>Loading...</div>}>
         <AiAssistantChat/>
       </Suspense>
