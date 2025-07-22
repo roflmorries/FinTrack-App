@@ -55,10 +55,42 @@ export default function MenuContent() {
         ))}
       </List>
       <Stack
-      sx={{alignItems: 'flex-start', p: 1, m: 1, fontSize: '50px'}}
+      sx={{
+        alignItems: 'flex-start', 
+        p: 1, 
+        m: 1,
+      }}
       >
-            <Button onClick={() => exportTransactionsToCSV(transactions)}>Export transactions to CSV</Button>
-            <Button onClick={() => exportTransactionsToPDF(transactions)}>Export transactions to PDF</Button>
+        <Button 
+          onClick={() => exportTransactionsToCSV(transactions)}
+          sx={{
+            color: 'rgba(255, 255, 255, 0.4) !important',
+            fontSize: '12px',
+            fontWeight: 500,
+            textTransform: 'none',
+            '&:hover': {
+              color: 'rgba(255, 255, 255, 0.8)',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            }
+          }}
+        >
+          Export transactions to CSV
+        </Button>
+        <Button 
+          onClick={() => exportTransactionsToPDF(transactions)}
+          sx={{
+            color: 'rgba(255, 255, 255, 0.4) !important',
+            fontSize: '12px',
+            fontWeight: 500,
+            textTransform: 'none',
+            '&:hover': {
+              color: 'rgba(255, 255, 255, 0.8)',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            }
+          }}
+        >
+          Export transactions to PDF
+        </Button>
       </Stack>
     </Stack>
   );

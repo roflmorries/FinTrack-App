@@ -39,7 +39,7 @@ export default function UserInfo({}: Props) {
           src={avatar}
           sx={{ width: 36, height: 36 }}
         />
-        <Box sx={{ mr: 'auto' }}>
+        <Box sx={{ mr: 'auto' , width: '140px'}}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
             {fullName}
           </Typography>
