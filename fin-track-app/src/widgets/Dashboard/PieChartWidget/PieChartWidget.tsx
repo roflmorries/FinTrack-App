@@ -6,7 +6,7 @@ import { memo, useMemo } from 'react';
 
 const WidgetContainer = styled.div`
   width: 100%;
-  max-height: 400px;
+  height: 400px;
 
   will-change: transform;
   contain: layout style paint;
@@ -63,7 +63,6 @@ const WidgetContainer = styled.div`
     margin-bottom: 16px !important;
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
   }
 
   .empty-state {
@@ -97,7 +96,7 @@ const MemoizedPie = memo(({ data }: { data: any[] }) => (
     nameKey='name'
     cx="50%"
     cy="50%"
-    innerRadius={60}
+    innerRadius={70}
     outerRadius={90}
     stroke='none'
   >
@@ -136,15 +135,15 @@ const PieChartWidget = memo(() => {
         
         {hasData ? (
           <ResponsiveContainer width="100%" height={300}>
-            <PieChart width={300} height={300}>
+            <PieChart>
               <Pie
                 data={data}
                 dataKey='value'
                 nameKey='name'
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={90}
+                innerRadius={80}
+                outerRadius={110}
                 stroke='none'
               >
                 {data.map((entry, index) => (
@@ -153,7 +152,7 @@ const PieChartWidget = memo(() => {
               </Pie>
               <text
                 x="50%"
-                y="50%"
+                y="46%"
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="#fff"

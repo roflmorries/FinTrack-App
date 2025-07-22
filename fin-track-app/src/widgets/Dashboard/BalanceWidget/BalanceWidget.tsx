@@ -54,7 +54,7 @@ const StyledBalanceWidget = styled.div`
   
   .info__container {
     max-height: 40%;
-    line-height: 8px;
+    line-height: 12px;
     position: relative;
     z-index: 1;
     

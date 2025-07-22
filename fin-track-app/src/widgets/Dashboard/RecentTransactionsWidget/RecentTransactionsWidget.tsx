@@ -4,6 +4,7 @@ import { SelectAllTransactions } from '../../../entities/transactions/model/tran
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Transaction } from '../../../entities/transactions/model/types';
+import { Button } from '@mui/material';
 
 type Props = {}
 
@@ -77,7 +78,7 @@ const WidgetContainer = styled.div`
   .transaction-section {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
+    border-radius: 24px;
     padding: 16px;
     transition: all 0.3s ease;
 
@@ -115,11 +116,6 @@ const WidgetContainer = styled.div`
   }
 
   .see-more-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    padding: 6px 12px !important;
     font-size: 12px !important;
     font-weight: 500 !important;
     cursor: pointer;
@@ -144,7 +140,7 @@ const WidgetContainer = styled.div`
   .transaction-item {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 24px;
     padding: 12px 16px;
     transition: all 0.3s ease;
 
@@ -253,7 +249,6 @@ const TransactionItem = memo(({ transaction }: { transaction: Transaction }) => 
 
 TransactionItem.displayName = 'TransactionItem';
 
-// Компонент для секции транзакций (доходы или расходы)
 const TransactionSection = memo(({ 
   title, 
   type, 
@@ -273,9 +268,9 @@ const TransactionSection = memo(({
         <span>{icon}</span>
         {title}
       </h4>
-      <button className="see-more-btn" onClick={onSeeMore}>
-        See more →
-      </button>
+      <Button variant='text' className="see-more-btn" onClick={onSeeMore}>
+        See more
+      </Button>
     </div>
     
     {transactions.length > 0 ? (
@@ -303,12 +298,10 @@ const RecentTransactionsWidget = memo(({}: Props) => {
   const allTransactions = useAppSelector(SelectAllTransactions);
 
   const { recentIncomes, recentExpenses } = useMemo(() => {
-    // ✅ НЕ мутируй исходный массив
     const sortedTransactions = allTransactions
-      .slice() // ✅ Создай копию
+      .slice()
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    // Берем последние 3 доходные и 3 расходные транзакции
     const recentIncomes = sortedTransactions
       .filter(tx => tx.type === 'income')
       .slice(0, 3);

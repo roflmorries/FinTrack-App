@@ -12,11 +12,11 @@ import Button from '@mui/material/Button';
 import { useBudgetNotifications } from '../../../shared/lib/hooks/useBudgetNotification';
 import styled from 'styled-components';
 
-const COLORS = ['#0088FE', '#FF8042'];
+const COLORS = ['#007AFF', '#FF3B30'];
 
 const StyledBudgetWidget = styled.div`
   width: 100%;
-  max-height: 400px;
+  height: 400px;
 
   will-change: transform;
   contain: layout style paint;
@@ -63,6 +63,7 @@ const StyledBudgetWidget = styled.div`
   .widget-content {
     position: relative;
     z-index: 1;
+    height: 100%;
   }
   
   .widget-header {
@@ -81,21 +82,6 @@ const StyledBudgetWidget = styled.div`
     margin: 0 !important;
   }
   
-  .edit-budget-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    padding: 4px 12px !important;
-    font-size: 12px !important;
-    min-width: auto !important;
-    transition: all 0.3s ease !important;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.2) !important;
-      border-color: rgba(255, 255, 255, 0.3) !important;
-    }
-  }
 
   .add-budget-btn {
     background: rgba(255, 255, 255, 0.1) !important;
@@ -116,6 +102,7 @@ const StyledBudgetWidget = styled.div`
     font-size: 14px !important;
     margin: 4px 0 !important;
     opacity: 0.9;
+    
   }
   
   .budget-warning {
@@ -162,17 +149,17 @@ const StyledDialog = styled(Dialog)`
 `;
 
 const MemoizedBudgetChart = memo(({ data }: { data: any[] }) => (
-  <PieChart width={200} height={200}>
+  <PieChart width={300} height={250}>
     <Pie
       data={data}
       dataKey="value"
       nameKey="name"
       cx="50%"
       cy="50%"
-      innerRadius={70}
-      outerRadius={80}
+      innerRadius={80}
+      outerRadius={110}
       fill="#8884d8"
-      label
+      stroke='none'
     >
       {data.map((entry, idx) => (
         <Cell key={`cell-${idx}`} fill={COLORS[idx]} />
@@ -223,6 +210,7 @@ const MonthlyBudgetWidget = memo(() => {
           {hasBudget && (
             <Button 
               className="edit-budget-btn"
+              variant='text'
               onClick={handleOpenDialog}
             >
               Edit
@@ -244,7 +232,9 @@ const MonthlyBudgetWidget = memo(() => {
           </div>
         ) : (
           <>
-            <MemoizedBudgetChart data={data} />
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <MemoizedBudgetChart data={data}/>
+            </div>
             
             <Typography className="budget-info">
               Потрачено: {spent} / {budget}

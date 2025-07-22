@@ -8,7 +8,7 @@ type Props = {}
 
 const StyledGoalsWidget = styled.div`
   width: 100%;
-  min-height: 200px;
+  min-height: 600px;
 
   will-change: transform;
   contain: layout style paint;
@@ -69,8 +69,8 @@ const StyledGoalsWidget = styled.div`
   .goal-item {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 24px;
+    padding: 14px;
     margin-bottom: 12px;
     transition: all 0.3s ease;
     
@@ -194,7 +194,10 @@ const percent = useMemo(() => {
 GoalItem.displayName = 'GoalItem';
 
 const GoalsProgressWidget = memo(({}: Props) => {
-  const goals = useAppSelector(selectActiveGoalsWithProgress);
+  const allGoals = useAppSelector(selectActiveGoalsWithProgress);
+  const goals = useMemo(() => {
+    return allGoals.slice(0, 4);
+  }, [allGoals]);
   
   const hasGoals = useMemo(() => goals.length > 0, [goals.length]);
   
