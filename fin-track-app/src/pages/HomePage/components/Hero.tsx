@@ -17,14 +17,14 @@ const StyledBox = styled('div')(({ theme }) => ({
   width: '100%',
   height: 400,
   marginTop: theme.spacing(8),
-  borderRadius: (theme.vars || theme).shape.borderRadius,
+  borderRadius: '24px',
   outline: '6px solid',
   outlineColor: 'hsla(220, 25%, 80%, 0.2)',
   border: '1px solid',
   borderColor: (theme.vars || theme).palette.grey[200],
   boxShadow: '0 0 12px 8px hsla(220, 25%, 80%, 0.2)',
-  backgroundImage: `'https://mui.com'}/static/screenshots/material-ui/getting-started/templates/dashboard.jpg)`,
-  backgroundSize: 'cover',
+  backgroundImage: `url('/dashboard.png')`,
+  backgroundSize: 'contain',
   [theme.breakpoints.up('sm')]: {
     marginTop: theme.spacing(10),
     height: 700,
@@ -42,7 +42,7 @@ export default function Hero() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    [0, 1, 2, 3].forEach((i) => {
+    [0, 1, 2, 3, 4].forEach((i) => {
       setTimeout(() => {
         setShow((prev) => {
           const next = [...prev];
@@ -162,7 +162,9 @@ export default function Hero() {
             </Typography>
           </Fade>
         </Stack>
-        <StyledBox id="image" />
+        <Fade in={show[4]} timeout={900}>
+          <StyledBox id="image" />
+        </Fade>
       </Container>
     </Box>
   );
