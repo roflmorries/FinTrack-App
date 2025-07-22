@@ -19,45 +19,7 @@ const sortOptions = [
 type SortType = 'date' | 'category' | 'type' | undefined;
 
 const TransactionsContainer = styled.div`
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 4px 16px rgba(0, 0, 0, 0.15);
-  
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-  
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 12px 40px rgba(0, 0, 0, 0.4),
-      0 8px 20px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.05) 0%, 
-      rgba(255, 255, 255, 0.02) 50%, 
-      rgba(255, 255, 255, 0.01) 100%
-    );
-    border-radius: 24px;
-    pointer-events: none;
-    z-index: 0;
-  }
 `;
 
 const ContentWrapper = styled.div`
@@ -219,7 +181,6 @@ export default function TransactionsList({ onDelete, onEdit }: TransactionsListP
       <TransactionsContainer>
         <ContentWrapper>
           <Header>
-            <Title>Transactions</Title>
           </Header>
           <EmptyState>
             <div className="empty-icon">💳</div>
@@ -239,7 +200,6 @@ export default function TransactionsList({ onDelete, onEdit }: TransactionsListP
       <TransactionsContainer>
         <ContentWrapper>
           <Header>
-            <Title>Transactions</Title>
           </Header>
           
           <FilterContainer>
