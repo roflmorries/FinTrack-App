@@ -35,7 +35,6 @@ export default function HomePage(props: { disableCustomTheme?: boolean }) {
     if (isAuth) {
       navigate("/dashboard");
     }
-    // Каскадная анимация: поочередно включаем show для каждой секции
     SECTIONS.forEach((_, i) => {
       setTimeout(() => {
         setShow((prev) => {
@@ -43,7 +42,7 @@ export default function HomePage(props: { disableCustomTheme?: boolean }) {
           next[i] = true;
           return next;
         });
-      }, 400 + i * 450); // задержка между секциями
+      }, 400 + i * 450);
     });
   }, [isAuth, navigate]);
 
