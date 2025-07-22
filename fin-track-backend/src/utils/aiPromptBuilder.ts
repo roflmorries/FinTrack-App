@@ -5,7 +5,8 @@ export function buildAIAssistantPrompt({
   freeBalance,
   goalsReserved,
   balanceHistory,
-  user
+  user,
+  budget
 }: {
   question: string;
   transactions: any[];
@@ -14,6 +15,7 @@ export function buildAIAssistantPrompt({
   goalsReserved: number;
   balanceHistory: any[];
   user: string;
+  budget: number;
 }) {
   const balanceHistoryFormatted = balanceHistory
     .map((b: { date: any; amount: any; }) => `${b.date}: ${b.amount} грн`)
@@ -38,6 +40,9 @@ export function buildAIAssistantPrompt({
 
 ### BALANCE HISTORY
 ${balanceHistoryFormatted || 'Нет данных'}
+
+### MONTHLY BUDGET
+${budget || 'Нет данных'}
 
 ### TRANSACTIONS (за последний месяц)
 ${transactionsFormatted || 'Нет транзакций'}
