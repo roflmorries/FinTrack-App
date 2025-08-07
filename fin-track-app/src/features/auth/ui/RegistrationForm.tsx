@@ -118,12 +118,7 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
           >
             Sign up
           </Typography>
-                        {avatar && (
-                // <img
-                //   src={avatar}
-                //   alt="avatar"
-                //   style={{ marginTop: 10, maxWidth: 100, borderRadius: 24, alignSelf: 'flex-end', marginBottom: '1%', position: 'absolute'}}
-                // />
+              {avatar && (
                 <Avatar
                 alt="User Avatar" 
                 src={avatar} 
