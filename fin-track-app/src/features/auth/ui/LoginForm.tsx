@@ -68,11 +68,6 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function LoginForm(props: { disableCustomTheme?: boolean }) {
-  // const [emailError, setEmailError] = useState(false);
-  // const [emailErrorMessage, setEmailErrorMessage] = useState('');
-  // const [passwordError, setPasswordError] = useState(false);
-  // const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-  // const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isAuth, error} = useAppSelector((state) => state.user)
