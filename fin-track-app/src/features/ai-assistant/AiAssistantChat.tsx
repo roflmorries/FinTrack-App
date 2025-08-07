@@ -90,7 +90,7 @@ export default function AiAssistantChat() {
         {loading && (
           <LoadingContainer>
             <CircularProgress size={20} />
-            <span>AI думает...</span>
+            <span>Assistant thinking...</span>
           </LoadingContainer>
         )}
         
