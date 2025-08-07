@@ -129,7 +129,7 @@ export default function TransactionPage() {
   const handleCloseModal = () => {
     setIsEditModalShown(false);
     setIsCreateModalShown(false);
-    setEditTransactionId(null); // ✅ Очищаем ID при закрытии
+    setEditTransactionId(null);
   }
 
   return (
@@ -144,7 +144,6 @@ export default function TransactionPage() {
           Create New Transaction
         </CreateButton>
         
-        {/* Модалка создания транзакции */}
         <StyledDialog
           open={isCreateModalShown}
           onClose={handleCloseModal}
@@ -167,7 +166,6 @@ export default function TransactionPage() {
           onDelete={handleTransactionDelete}
         />
 
-        {/* Модалка редактирования транзакции */}
         <StyledDialog
           open={isEditModalShown}
           onClose={handleCloseModal}
