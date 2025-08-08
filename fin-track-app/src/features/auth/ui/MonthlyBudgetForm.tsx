@@ -31,7 +31,6 @@ export default function MonthlyBudgetForm({ onSuccess }: MonthlyBudgetFormProps)
     >
       <TextField
       label='Monthly Budget'
-      // type='number'
       value={value}
       onChange={event => setValue(event.target.value)}
       />
