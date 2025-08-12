@@ -11,7 +11,7 @@ export default function GoogleLoginButton() {
   const handleLoginByGoogle = async () => {
     try {
       const resultAction = await dispatch(signInUserWithGoogle());
-      if(signInUserWithGoogle.fulfilled.match(resultAction)){
+      if (signInUserWithGoogle.fulfilled.match(resultAction)) {
         navigate('/dashboard')
       } else {
         console.error('Login error:', resultAction.payload)
