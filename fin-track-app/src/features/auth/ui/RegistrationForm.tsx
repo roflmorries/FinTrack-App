@@ -14,7 +14,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../../../shared/shared-theme/AppTheme';
 import ColorModeSelect from '../../../shared/shared-theme/ColorModeSelect';
-import { FacebookIcon, SitemarkIcon } from '../../../pages/RegistrationPage/components/CustomIcons';
+import { SitemarkIcon } from '../../../pages/RegistrationPage/components/CustomIcons';
 import { useEffect, useState } from 'react'
 import { registerUser } from '../../../entities/user/model/userThunks';
 import { useAppDispatch, useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { uploadAvatar } from '../../../shared/api/uploadAvatar';
 import GoogleLoginButton from './GoogleLoginButton';
 import Avatar from '@mui/material/Avatar';
+import FacebookLoginButton from './FacebookLoginButton';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -223,15 +224,7 @@ export default function RegistrationForm(props: { disableCustomTheme?: boolean }
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <GoogleLoginButton/>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<FacebookIcon />}
-              sx={{borderRadius: '16px'}}
-            >
-              Sign up with Facebook
-            </Button>
+            <FacebookLoginButton/>
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link

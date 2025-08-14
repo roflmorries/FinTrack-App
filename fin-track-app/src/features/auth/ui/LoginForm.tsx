@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { browserLocalPersistence, browserSessionPersistence, setPersistence } from "firebase/auth";
 import { auth } from "../../../shared/config/firebase";
+import FacebookLoginButton from './FacebookLoginButton';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -193,15 +194,7 @@ export default function LoginForm(props: { disableCustomTheme?: boolean }) {
           <Divider>or</Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <GoogleLoginButton/>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Facebook')}
-              startIcon={<FacebookIcon />}
-              sx={{ borderRadius: '16px' }}
-            >
-              Sign in with Facebook
-            </Button>
+            <FacebookLoginButton/>
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link
