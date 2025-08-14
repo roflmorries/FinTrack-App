@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import { useAppDispatch } from "../../../shared/lib/hooks/redux/reduxTypes";
 import { signInUserWithGoogle } from "../../../entities/user/model/userThunks";
 import { useNavigate } from "react-router-dom";
-import { GoogleIcon} from '../../../pages/LoginPage/components/CustomIcons';
+import { GoogleIcon } from '../../../pages/LoginPage/components/CustomIcons';
 
 export default function GoogleLoginButton() {
   const dispatch = useAppDispatch();
