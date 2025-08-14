@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getIdToken, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, getIdToken, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, FacebookAuthProvider } from "firebase/auth";
 import { User } from "./types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { auth } from "../../../shared/config/firebase";
@@ -81,6 +81,45 @@ export const signInUserWithGoogle = createAsyncThunk<User, void>(
   async (_, { rejectWithValue }) => {
     try {
       const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      const user = result.user;
+      const uid = user.uid;
+      const email = user.email || '';
+      const fullName = user.displayName || '';
+      const avatar = user.photoURL || '';
+      const token = await getIdToken(user);
+
+      try {
+        await axios.post(`${API_URL}/users`, { uid, email, fullName, avatar }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (error: any) {
+        if (!axios.isAxiosError(error) || error.response?.status !== 409) {
+          throw error;
+        }
+      }
+
+      const res = await axios.get<User>(`${API_URL}/users/${uid}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const signInUserWithFacebook = createAsyncThunk<User, void>(
+  'user/signInWithFacebook',
+  async(_, {rejectWithValue}) => {
+    try {
+      const provider = new FacebookAuthProvider();
+
+      provider.addScope('email');
+      provider.addScope('public_profile');
+
       const result = await signInWithPopup(auth, provider);
 
       const user = result.user;
