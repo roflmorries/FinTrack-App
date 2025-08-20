@@ -16,7 +16,7 @@ const WidgetContainer = styled.div`
   will-change: transform;
   contain: layout style paint;
   
-  background: rgba(30, 30, 30, 0.95);
+  /* background: rgba(30, 30, 30, 0.95); */
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 24px;

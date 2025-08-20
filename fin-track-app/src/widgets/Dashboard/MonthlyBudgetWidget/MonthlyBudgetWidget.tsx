@@ -20,8 +20,7 @@ const StyledBudgetWidget = styled.div`
 
   will-change: transform;
   contain: layout style paint;
-  
-  background: rgba(30, 30, 30, 0.95);
+
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 24px;
@@ -134,19 +133,19 @@ const StyledBudgetWidget = styled.div`
   }
 `;
 
-const StyledDialog = styled(Dialog)`
-  .MuiDialog-paper {
-    background: rgba(30, 30, 30, 0.95) !important;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 16px !important;
-    color: #fff;
-  }
+// const StyledDialog = styled(Dialog)`
+//   .MuiDialog-paper {
+//     background: rgba(30, 30, 30, 0.95) !important;
+//     backdrop-filter: blur(12px);
+//     border: 1px solid rgba(255, 255, 255, 0.15);
+//     border-radius: 16px !important;
+//     color: #fff;
+//   }
   
-  .MuiDialogTitle-root {
-    color: #fff !important;
-  }
-`;
+//   .MuiDialogTitle-root {
+//     color: #fff !important;
+//   }
+// `;
 
 const MemoizedBudgetChart = memo(({ data }: { data: any[] }) => (
   <PieChart width={300} height={250}>
@@ -206,7 +205,7 @@ const MonthlyBudgetWidget = memo(() => {
     <StyledBudgetWidget>
       <div className="widget-content">
         <div className="widget-header">
-          <Typography className="budget-title">💰 Monthly Budget</Typography>
+          <Typography className="budget-title">Monthly Budget</Typography>
           {hasBudget && (
             <Button 
               className="edit-budget-btn"

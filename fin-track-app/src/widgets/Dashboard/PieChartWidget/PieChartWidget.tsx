@@ -10,8 +10,7 @@ const WidgetContainer = styled.div`
 
   will-change: transform;
   contain: layout style paint;
-  
-  background: rgba(30, 30, 30, 0.95);
+
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 24px;
@@ -89,22 +88,22 @@ const WidgetContainer = styled.div`
   }
 `;
 
-const MemoizedPie = memo(({ data }: { data: any[] }) => (
-  <Pie
-    data={data}
-    dataKey='value'
-    nameKey='name'
-    cx="50%"
-    cy="50%"
-    innerRadius={70}
-    outerRadius={90}
-    stroke='none'
-  >
-    {data.map((entry, index) => (
-      <Cell key={`cell-${index}`} fill={entry.color}/>
-    ))}
-  </Pie>
-));
+// const MemoizedPie = memo(({ data }: { data: any[] }) => (
+//   <Pie
+//     data={data}
+//     dataKey='value'
+//     nameKey='name'
+//     cx="50%"
+//     cy="50%"
+//     innerRadius={70}
+//     outerRadius={90}
+//     stroke='none'
+//   >
+//     {data.map((entry, index) => (
+//       <Cell key={`cell-${index}`} fill={entry.color}/>
+//     ))}
+//   </Pie>
+// ));
 
 const MemoizedTooltip = memo(() => (
   <Tooltip
