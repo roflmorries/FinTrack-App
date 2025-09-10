@@ -133,20 +133,6 @@ const StyledBudgetWidget = styled.div`
   }
 `;
 
-// const StyledDialog = styled(Dialog)`
-//   .MuiDialog-paper {
-//     background: rgba(30, 30, 30, 0.95) !important;
-//     backdrop-filter: blur(12px);
-//     border: 1px solid rgba(255, 255, 255, 0.15);
-//     border-radius: 16px !important;
-//     color: #fff;
-//   }
-  
-//   .MuiDialogTitle-root {
-//     color: #fff !important;
-//   }
-// `;
-
 const MemoizedBudgetChart = memo(({ data }: { data: any[] }) => (
   <PieChart width={300} height={250}>
     <Pie
