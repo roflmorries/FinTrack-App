@@ -320,14 +320,14 @@ const RecentTransactionsWidget = memo(({}: Props) => {
   return (
     <WidgetContainer>
       <div className="widget-content">
-        <h3 className="widget-title">📋 Recent Transactions</h3>
+        <h3 className="widget-title">Recent Transactions</h3>
         
         <div className="transactions-container">
           <TransactionSection
             title="Income"
             type="income"
             transactions={recentIncomes}
-            icon="💰"
+            icon=''
             onSeeMore={handleSeeMore}
           />
           
@@ -335,7 +335,7 @@ const RecentTransactionsWidget = memo(({}: Props) => {
             title="Expenses"
             type="expense"
             transactions={recentExpenses}
-            icon="💸"
+            icon=''
             onSeeMore={handleSeeMore}
           />
         </div>
