@@ -130,7 +130,7 @@ const PieChartWidget = memo(() => {
   return (
     <WidgetContainer>
       <div className="widget-content">
-        <h3 className="chart-title">📊 Categories</h3>
+        <h3 className="chart-title">Categories</h3>
         
         {hasData ? (
           <ResponsiveContainer width="100%" height={300}>
