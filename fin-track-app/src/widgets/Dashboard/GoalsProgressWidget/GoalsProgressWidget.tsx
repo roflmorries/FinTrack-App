@@ -206,7 +206,7 @@ const GoalsProgressWidget = memo(({}: Props) => {
   return (
     <StyledGoalsWidget>
       <div className="widget-content">
-        <h3 className="goals-title">🎯 Active Goals</h3>
+        <h3 className="goals-title">Active Goals</h3>
         
         {hasGoals ? (
           goals.map(goal => (
