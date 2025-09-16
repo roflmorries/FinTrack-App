@@ -6,9 +6,9 @@ import MenuContent from './MenuContent';
 import TransactionForm from '../../../features/transactions/TransactionForm';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'; // ✅ Заменили импорт
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import AddCardIcon from '@mui/icons-material/AddCard';
-import CloseIcon from '@mui/icons-material/Close'; // ✅ Добавили иконку закрытия
+import CloseIcon from '@mui/icons-material/Close';
 
 const drawerWidth = 260;
 
@@ -23,7 +23,6 @@ const Drawer = styled(MuiDrawer)({
   },
 });
 
-// ✅ Стилизованный Dialog
 const StyledDialog = styled(Dialog)`
   .MuiDialog-paper {
     background: black !important;
