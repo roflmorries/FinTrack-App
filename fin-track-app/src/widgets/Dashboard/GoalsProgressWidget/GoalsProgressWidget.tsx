@@ -127,6 +127,7 @@ const StyledGoalsWidget = styled.div`
     text-align: center;
     padding: 40px 20px;
     color: rgba(255, 255, 255, 0.6);
+    margin-top: 30%;
     
     .empty-icon {
       font-size: 48px;
