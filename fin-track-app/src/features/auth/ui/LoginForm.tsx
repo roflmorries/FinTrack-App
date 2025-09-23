@@ -14,7 +14,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../../../shared/shared-theme/AppTheme';
 import ColorModeSelect from '../../../shared/shared-theme/ColorModeSelect';
-import { FacebookIcon, SitemarkIcon } from '../../../pages/LoginPage/components/CustomIcons';
+import { SitemarkIcon } from '../../../pages/LoginPage/components/CustomIcons';
 import { useState } from 'react';
 import GoogleLoginButton from "./GoogleLoginButton"
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks/redux/reduxTypes"
