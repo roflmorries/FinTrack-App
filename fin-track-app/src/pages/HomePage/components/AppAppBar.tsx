@@ -93,7 +93,7 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="outlined" size="small" onClick={() => navigate('/login')} sx={{ borderRadius: '24px' }} >
+            <Button variant="outlined" size="small" onClick={() => navigate('/login')} sx={{ borderRadius: '24px' }} >
               Try Now
             </Button>
             <ColorModeIconDropdown />
