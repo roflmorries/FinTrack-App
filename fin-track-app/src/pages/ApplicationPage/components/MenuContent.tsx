@@ -16,13 +16,14 @@ import { SelectAllTransactions } from '../../../entities/transactions/model/tran
 import styled from 'styled-components';
 
 
+
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
   alignItems: "center",
   textDecoration: "none",
-  gap: "3%",
+  // gap: "2rem",
   fontWeight: 400,
   
-  width: "100%",
+  // width: "100%",
 
   willChange: "transform",
   contain: "layout style paint",
@@ -84,7 +85,7 @@ export default function MenuContent() {
       <List dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <StyledNavLink
+            <NavLink
               to={item.to}
               {...(item.to === '/dashboard' ? { end: true } : {})}
               style={({ isActive }) => ({
@@ -94,15 +95,15 @@ export default function MenuContent() {
                 color: isActive ? '#803eff' : 'inherit',
                 padding: '8px 16px',
                 borderRadius: '24px',
-                gap: '3%',
-                // background: isActive ? 'rgba(128,62,255,0.08)' : 'none',
+                gap: '0.7rem',
+                background: isActive ? "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.01) 100%)" : 'none',
                 fontWeight: isActive ? 600 : 400,
                 border: isActive ? '1px solid rgba(255, 255, 255, 0.15)' : 'none',
               })}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
-            </StyledNavLink>
+            </NavLink>
           </ListItem>
         ))}
       </List>
