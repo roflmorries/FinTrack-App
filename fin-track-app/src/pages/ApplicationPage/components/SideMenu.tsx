@@ -14,9 +14,10 @@ const drawerWidth = 260;
 
 const Drawer = styled(MuiDrawer)({
   width: drawerWidth,
+  // height: 'calc(100%-20px)',
   flexShrink: 0,
   boxSizing: 'border-box',
-  mt: 10,
+  // mt: 10,
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
     boxSizing: 'border-box',
@@ -56,10 +57,15 @@ export default function SideMenu() {
       sx={{
         display: { xs: 'none', md: 'block' },
         [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'black',
-          borderRight: 'none', 
-          borderTop: 'none',
-          boxShadow: 'none',
+          // backgroundColor: 'black',
+          // borderRight: 'none', 
+          // borderTop: 'none',
+          // boxShadow: 'none',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          margin: '0.6rem',
+          height: 'calc(100% - 1.25rem)'
         },
       }}
     >
@@ -114,7 +120,6 @@ export default function SideMenu() {
           Add Transaction
         </Button>
         
-        {/* ✅ Заменили на MUI Dialog */}
         <StyledDialog
           open={modal2Open}
           onClose={() => setModal2Open(false)}
