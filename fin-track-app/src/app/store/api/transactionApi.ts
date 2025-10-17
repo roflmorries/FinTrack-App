@@ -7,7 +7,9 @@ const API_URL_TRANSACTIONS = `${API_URL}/transactions`;
 export const transactionApi = api.injectEndpoints({
   endpoints: builder => ({
     fetchTransactions: builder.query<Transaction[], string>({
-      query: userId => `${API_URL_TRANSACTIONS}?userId=${userId}`,
+      query: (userId: string) => `${API_URL_TRANSACTIONS}?userId=${userId}`,
     })
   })
 })
+
+export const { useFetchTransactionsQuery } = transactionApi

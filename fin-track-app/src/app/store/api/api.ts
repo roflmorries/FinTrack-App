@@ -19,4 +19,4 @@ export const api = createApi({
    }),
   tagTypes: ['Transaction', 'Category', 'Goal', 'Notification', 'User'],
   endpoints: () => ({})
-})
+});

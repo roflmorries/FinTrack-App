@@ -13,12 +13,17 @@ import { fetchGoals } from '../entities/fin-goals/goalThunk';
 import { fetchAllNotifications } from '../entities/notifications/notificationThunk';
 import AlertNotification from '../widgets/Notifications/AlertNotification';
 import { StyledToastContainer } from '../shared/ui/App/app.styled';
+import { useFetchTransactionsQuery } from './store/api/transactionApi';
 
 function App() {
 
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(state => state.user.isLoading)
-  const user = useAppSelector(state => state.user.currentUser)
+  // const isLoading = useAppSelector(state => state.user.isLoading);
+  const user = useAppSelector(state => state.user.currentUser);
+
+  const { data, error, isLoading } = useFetchTransactionsQuery(user?.uid ?? '', { skip: !user });
+
+  console.log('transactions', data);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
