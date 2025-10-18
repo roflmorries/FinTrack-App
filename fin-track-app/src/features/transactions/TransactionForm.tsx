@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { useEffect, useMemo, useCallback, useState } from "react";
 import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
-import { createTransaction, updateTransaction } from "../../entities/transactions/model/transactionThunk";
+// import { updateTransaction } from "../../entities/transactions/model/transactionThunk";
 import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import { debounce } from 'lodash';
@@ -24,6 +24,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AutoAwesome } from '@mui/icons-material';
 import { transactionSchema } from './validation/transactionSchema';
 import { StyledForm, TypeFieldContainer, TypeLabel, StyledToggleButtonGroup, StyledTextField, StyledFormControl, AutoDetectIndicator, SubmitButton } from '../../shared/ui/Transaction/transactionForm.styled';
+import { useCreateTransactionMutation, useUpdateTransactionMutation } from "../../app/store/api/transactionApi";
+import { useGetTransactionById } from "../../shared/lib/hooks/redux/useGetTransactionById";
 
 interface TransactionFormProps {
   onSave: () => void;
@@ -37,13 +39,16 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   const categories = useAppSelector(selectAllCategories);
   const userId = useAppSelector(state => state.user.currentUser?.uid);
   const dispatch = useAppDispatch();
-  const currentTransaction = useAppSelector(state => 
-    transactionId ? SelectTransactionById(state, transactionId) : undefined
-  );
+  // const currentTransaction = useAppSelector(state => 
+  //   transactionId ? SelectTransactionById(state, transactionId) : undefined
+  // );
+  const currentTransaction = useGetTransactionById(userId, transactionId);
   const goals = useAppSelector(selectAllGoals);
   const [showAutoDetect, setShowAutoDetect] = useState(false);
   const [detectedCategory, setDetectedCategory] = useState('');
 
+  const [createTransaction, { isLoading: isCreating }] = useCreateTransactionMutation();
+  const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
   const {
     control,
     handleSubmit,
@@ -150,9 +155,9 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
           id: transactionId,
           changes: transactionData
         };
-        await dispatch(updateTransaction(updatedTransaction));
+        await updateTransaction(updatedTransaction);
       } else {
-        await dispatch(createTransaction(transactionData));
+        await createTransaction(transactionData);
       }
 
       onSave();

@@ -3,9 +3,10 @@ import TransactionForm from "../../features/transactions/TransactionForm"
 import { useAppDispatch } from "../../shared/lib/hooks/redux/reduxTypes"
 import TransactionsList from "../../features/transactions/TransactionsList"
 import { useState } from "react"
-import { deleteTransaction } from "../../entities/transactions/model/transactionThunk"
+// import { deleteTransaction } from "../../entities/transactions/model/transactionThunk"
 import { Button, Dialog, DialogTitle, DialogContent, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import { useDeleteTransactionMutation } from "../../app/store/api/transactionApi"
 
 const Layout = styled.div`
 `
@@ -117,13 +118,15 @@ export default function TransactionPage() {
   const [isEditModalShown, setIsEditModalShown] = useState(false);
   const [editTransactionId, setEditTransactionId] = useState<string | null>(null);
 
+  const [deleteTransaction, { isLoading: isDeleting }] = useDeleteTransactionMutation();
+
   const handleTransactionEdit = (transactionId: string) => {
     setIsEditModalShown(true);
     setEditTransactionId(transactionId);
   }
 
   const handleTransactionDelete = async (transactionId: string) => {
-    await dispatch(deleteTransaction(transactionId));
+    await deleteTransaction(transactionId);
   }
 
   const handleCloseModal = () => {
