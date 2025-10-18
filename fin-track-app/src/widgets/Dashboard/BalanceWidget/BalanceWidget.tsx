@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes'
-import { selectBalance, selectFreeBalance, selectGoalsReserved } from '../../../entities/transactions/model/selectBalance'
+import { useBalanceCalculations } from '../../../shared/lib/hooks/redux/useBalanceCalculations'
 import BalanceChartWidget from '../BalanceChartWidget/BalanceChartWidget'
 import { memo, useMemo } from 'react';
 
@@ -85,9 +85,8 @@ const BalanceInfo = memo(({ total, goals, free }: { total: number, goals: number
 BalanceInfo.displayName = 'BalanceInfo';
 
 const BalanceWidget = memo(({}: Props) => {
-  const total = useAppSelector(selectBalance);
-  const goals = useAppSelector(selectGoalsReserved);
-  const free = useAppSelector(selectFreeBalance);
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const { balance: total, goalsReserved: goals, freeBalance: free } = useBalanceCalculations(userId);
   
   const balanceData = useMemo(() => ({ total, goals, free }), [total, goals, free]);
   

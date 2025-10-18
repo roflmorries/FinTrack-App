@@ -1,5 +1,6 @@
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes'
-import { selectBalanceHistory, selectBalance } from '../../../entities/transactions/model/selectBalance'
+import { useBalanceCalculations } from '../../../shared/lib/hooks/redux/useBalanceCalculations';
+import { useBalanceHistory } from '../../../shared/lib/hooks/redux/useBalanceHistory';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import { useMemo, memo } from 'react';
@@ -62,25 +63,30 @@ const EmptyState = memo(() => (
 ));
 
 const BalanceChartWidget = memo(({}: Props) => {
-  const data = useAppSelector(selectBalanceHistory);
-  const balance = useAppSelector(selectBalance);
+  const userId = useAppSelector(state => state.user.currentUser?.uid)
+  const { balance, goalsReserved, freeBalance } = useBalanceCalculations(userId);
+  const { history } = useBalanceHistory(userId);
+
+
+  // const data = useAppSelector(selectBalanceHistory);
+  // const balance = useAppSelector(selectBalance);
   
   const chartData = useMemo(() => {
-    if (data.length === 0) return [];
+    if (history.length === 0) return [];
     
-    if (data.length === 1) {
+    if (history.length === 1) {
       return [
-        { ...data[0], date: 'Previous' },
-        { ...data[0] }
+        { ...history[0], date: 'Previous' },
+        { ...history[0] }
       ];
     }
     
-    return data;
-  }, [data]);
+    return history;
+  }, [history]);
 
   const isEmpty = useMemo(() => 
-    data.length === 0 || balance === 0, 
-    [data.length, balance]
+    history.length === 0 || balance === 0, 
+    [history.length, balance]
   );
   
   return (
