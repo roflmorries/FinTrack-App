@@ -1,16 +1,16 @@
-import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
-import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
+import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { useState } from "react";
 import CategoriesList from "../../features/categories/CategoriesList";
 import CategoryForm from "../../features/categories/CategoryForm";
-import { deleteCategory } from "../../entities/categories/model/categoryThunk";
 import { Close } from "@mui/icons-material";
 import { Layout, PageTitle, CreateButton, StyledDialog, StyledDialogTitle, StyledIconButton, StyledDialogContent } from "../../shared/ui/Category/categoryPage.styled";
+import { useDeleteCategoryMutation, useGetCategoriesQuery } from "../../app/store/api/categoryApi";
 
 
 export default function CategoriesPage() {
-  const data = useAppSelector(selectAllCategories)
-  const dispatch = useAppDispatch();
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const { data = [] } = useGetCategoriesQuery(userId || '', { skip: !userId });
+  const [deleteCategory] = useDeleteCategoryMutation();
   const [isEditModalShown, setIsEditModalShown] = useState(false);
   const [isNewModalShown, setIsNewModalShown] = useState(false);
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
@@ -21,7 +21,7 @@ export default function CategoriesPage() {
   }
 
   const handleCategoryDelete = async (categoryId: string) => {
-    await dispatch(deleteCategory(categoryId));
+    await deleteCategory(categoryId);
   }
 
   const handleCloseModal = () => {

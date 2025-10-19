@@ -1,7 +1,6 @@
-import { useAppDispatch, useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
+import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { useEffect } from 'react';
 import { selectCategoryById } from '../../entities/categories/model/categorySelectors';
-import { createCategory, updateCategory } from '../../entities/categories/model/categoryThunk';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { 
@@ -10,6 +9,7 @@ import {
 } from '@mui/material';
 import { categorySchema, CategoryFormData } from './validation/categorySchema';
 import { StyledForm, StyledTextField, StyledFormControl, StyledColorInput, SubmitButton } from '../../shared/ui/Category/categoryForm.styled';
+import { useCreateCategoryMutation, useUpdateCategoryMutation } from '../../app/store/api/categoryApi';
 
 type CategoryFormProps = {
   onSave: () => void;
@@ -18,7 +18,8 @@ type CategoryFormProps = {
 
 
 export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) {
-  const dispatch = useAppDispatch();
+  const [createCategory] = useCreateCategoryMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
   const userId = useAppSelector(state => state.user.currentUser?.uid);
   const currentCategory = useAppSelector(state => categoryId ? selectCategoryById(state, categoryId) : undefined);
 
@@ -64,13 +65,13 @@ export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) 
           userId,
           changes: categoryData
         };
-        await dispatch(updateCategory(updatedCategory));
+        await updateCategory(updatedCategory);
       } else {
         const newCategory = {
           userId,
           ...categoryData
         };
-        await dispatch(createCategory(newCategory));
+        await createCategory(newCategory);
       }
 
       onSave();
