@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
-import { SelectAllTransactions } from '../../entities/transactions/model/transactionsSelectors';
 import { CircularProgress } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { askAssistant } from '../../shared/api/aiAssistant';
-import { selectBalance, selectBalanceHistory, selectFreeBalance, selectGoalsReserved } from '../../entities/transactions/model/selectBalance';
 import { ChatContainer, EmptyState, InputContainer, LoadingContainer, MessageBubble, MessageRow, SendButton, StyledContainer, StyledTextField } from '../../shared/ui/Assistant/AssistantChat.styled';
 import { selectMonthlyBudget } from '../../entities/user/selectors/selectMonthlyBudget';
+import { useFetchTransactionsQuery } from '../../app/store/api/transactionApi';
+import { useBalanceCalculations } from '../../shared/lib/hooks/redux/useBalanceCalculations';
+import { useBalanceHistory } from '../../shared/lib/hooks/redux/useBalanceHistory';
 
 
 type Message = { role: 'user' | 'assistant', content: string }
@@ -17,11 +18,10 @@ export default function AiAssistantChat() {
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  const transactions = useAppSelector(SelectAllTransactions);
-  const balance = useAppSelector(selectBalance);
-  const freeBalance = useAppSelector(selectFreeBalance)
-  const balanceGoalReserved = useAppSelector(selectGoalsReserved)
-  const balanceHistory = useAppSelector(selectBalanceHistory)
+  const userId = useAppSelector(state => state.user.currentUser?.uid)
+  const { data: transactions = [] } = useFetchTransactionsQuery(userId || '', { skip: !userId });
+  const { balance, goalsReserved: balanceGoalReserved, freeBalance } = useBalanceCalculations(userId);
+  const { history: balanceHistory } = useBalanceHistory(userId);
   const user = useAppSelector(state => state.user.currentUser?.fullName) || ''
   const budget = useAppSelector(selectMonthlyBudget);
 
