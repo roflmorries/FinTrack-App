@@ -1,13 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { useEffect, useMemo, useCallback, useState } from "react";
-import { SelectTransactionById } from "../../entities/transactions/model/transactionsSelectors";
-// import { updateTransaction } from "../../entities/transactions/model/transactionThunk";
 import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import { debounce } from 'lodash';
-import axios from "axios";
-import { API_URL } from "../../shared/config/config";
-import { fetchCategories } from "../../entities/categories/model/categoryThunk";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -24,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AutoAwesome } from '@mui/icons-material';
 import { transactionSchema } from './validation/transactionSchema';
 import { StyledForm, TypeFieldContainer, TypeLabel, StyledToggleButtonGroup, StyledTextField, StyledFormControl, AutoDetectIndicator, SubmitButton } from '../../shared/ui/Transaction/transactionForm.styled';
-import { useCreateTransactionMutation, useUpdateTransactionMutation } from "../../app/store/api/transactionApi";
+import { useCreateTransactionMutation, useDetectCategoryByDescriptionMutation, useUpdateTransactionMutation } from "../../app/store/api/transactionApi";
 import { useGetTransactionById } from "../../shared/lib/hooks/redux/useGetTransactionById";
 
 interface TransactionFormProps {
@@ -38,10 +33,6 @@ type TransactionFormData = yup.InferType<typeof transactionSchema>;
 export default function TransactionForm({ onSave, transactionId }: TransactionFormProps) {
   const categories = useAppSelector(selectAllCategories);
   const userId = useAppSelector(state => state.user.currentUser?.uid);
-  const dispatch = useAppDispatch();
-  // const currentTransaction = useAppSelector(state => 
-  //   transactionId ? SelectTransactionById(state, transactionId) : undefined
-  // );
   const currentTransaction = useGetTransactionById(userId, transactionId);
   const goals = useAppSelector(selectAllGoals);
   const [showAutoDetect, setShowAutoDetect] = useState(false);
@@ -49,6 +40,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
 
   const [createTransaction, { isLoading: isCreating }] = useCreateTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
+  const [detectCategoryByDescription, {isLoading: isDetecting, error}] = useDetectCategoryByDescriptionMutation();
   const {
     control,
     handleSubmit,
@@ -97,27 +89,29 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
       if (!comment || !userId) return;
 
       try {
-        const { data } = await axios.post<{ category: string }>(
-          `${API_URL}/detect-category`,
-          { description: comment, userId }
-        );
+        // const { data } = await axios.post<{ category: string }>(
+        //   `${API_URL}/detect-category`,
+        //   { description: comment, userId }
+        // );
+
+        const category = await detectCategoryByDescription({ description: comment, userId }).unwrap();
         
-        if (data.category) {
-          setValue('category', data.category);
-          setDetectedCategory(data.category);
+        if (category) {
+          setValue('category', category);
+          setDetectedCategory(category);
           setShowAutoDetect(true);
           
           setTimeout(() => {
             setShowAutoDetect(false);
           }, 3000);
           
-          dispatch(fetchCategories(userId));
+          // dispatch(fetchCategories(userId));
         }
       } catch (error) {
         console.error('Error detecting category:', error);
       }
     }, 400),
-    [userId, setValue, dispatch]
+    [userId, setValue, detectCategoryByDescription]
   );
 
   const categoryOptions = useMemo(() => 
