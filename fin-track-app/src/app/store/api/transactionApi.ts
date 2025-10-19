@@ -38,6 +38,14 @@ export const transactionApi = api.injectEndpoints({
         method: 'DELETE'
       }),
       invalidatesTags: (result, error, id) => [{ type: 'Transaction', id }]
+    }),
+    detectCategoryByDescription: builder.mutation<string, { description: string, userId?: string }>({
+      query: description => ({
+        url: `${API_URL}/detect-category`,
+        method: 'POST',
+        body: description
+      }),
+      transformResponse: (response: { category: string }) => response.category
     })
   })
 })
@@ -47,4 +55,5 @@ export const {
   useCreateTransactionMutation,
   useUpdateTransactionMutation,
   useDeleteTransactionMutation,
+  useDetectCategoryByDescriptionMutation,
  } = transactionApi
