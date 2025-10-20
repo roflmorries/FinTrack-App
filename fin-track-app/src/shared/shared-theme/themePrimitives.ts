@@ -165,7 +165,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
       background: {
         default: 'hsl(0, 0%, 99%)',
         paper: 'hsl(220, 35%, 97%)',
-        ...(mode === 'dark' && { default: gray[900], paper: 'hsl(220, 30%, 7%)' }),
+        paperChannel: '246 248 250',
+        defaultChannel: '252 252 252',
+        ...(mode === 'dark' && { default: gray[900], paper: 'hsl(220, 30%, 7%)', paperChannel: '14 17 24', defaultChannel: '9 10 14' }),
       },
       text: {
         primary: gray[800],
@@ -275,6 +277,8 @@ export const colorSchemes = {
       background: {
         default: 'hsl(0, 0%, 99%)',
         paper: 'hsl(220, 35%, 97%)',
+        paperChannel: '246 248 250',
+        defaultChannel: '252 252 252',
       },
       text: {
         primary: gray[800],
@@ -325,6 +329,8 @@ export const colorSchemes = {
       background: {
         default: 'black',
         paper: 'black',
+        paperChannel: '0 0 0',
+        defaultChannel: '0 0 0',
       },
       text: {
         primary: 'hsl(0, 0%, 100%)',
