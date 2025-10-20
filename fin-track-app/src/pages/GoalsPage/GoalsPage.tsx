@@ -2,17 +2,18 @@ import GoalForm from "../../features/goals/GoalForm"
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import GoalsList from "../../features/goals/GoalsList";
-import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
-import { deleteGoal } from "../../entities/fin-goals/goalThunk";
 import { Close } from "@mui/icons-material";
 import { Layout, CreateButton, StyledDialog, StyledDialogTitle, StyledIconButton, StyledDialogContent } from "../../shared/ui/Goals/GoalPage.styled";
+import { useDeleteGoalMutation, useGetGoalsQuery } from "../../app/store/api/goalsApi";
 
 type Props = {}
 
 
-export default function GoalsPage({}: Props) {
+export default function GoalsPage({ }: Props) {
   const dispatch = useAppDispatch();
-  const data = useAppSelector(selectAllGoals)
+  const [deleteGoal] = useDeleteGoalMutation();
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const { data = [] } = useGetGoalsQuery(userId || '', { skip: !userId });
   const [isEditModalShown, setIsEditModalShown] = useState(false);
   const [isNewModalShown, setIsNewModalShown] = useState(false);
   const [editGoalId, setEditGoalId] = useState<string | null>(null);
@@ -22,8 +23,8 @@ export default function GoalsPage({}: Props) {
     setEditGoalId(goalId)
   }
 
-  const handleGoalDelete = (goalId: string) => {
-    dispatch(deleteGoal(goalId));
+  const handleGoalDelete = async (goalId: string) => {
+    await deleteGoal(goalId);
   }
 
   const handleCloseModal = () => {
@@ -34,8 +35,8 @@ export default function GoalsPage({}: Props) {
 
   return (
     <Layout>
-      <CreateButton 
-        variant="outlined" 
+      <CreateButton
+        variant="outlined"
         onClick={() => setIsNewModalShown(true)}
       >
         Create New Goal
@@ -54,11 +55,11 @@ export default function GoalsPage({}: Props) {
           </StyledIconButton>
         </StyledDialogTitle>
         <StyledDialogContent>
-          <GoalForm onSave={handleCloseModal}/>
+          <GoalForm onSave={handleCloseModal} />
         </StyledDialogContent>
       </StyledDialog>
 
-      <GoalsList items={data} onEdit={handleGoalEdit} onDelete={handleGoalDelete}/>
+      <GoalsList items={data} onEdit={handleGoalEdit} onDelete={handleGoalDelete} />
 
       <StyledDialog
         open={isEditModalShown}
@@ -73,7 +74,7 @@ export default function GoalsPage({}: Props) {
           </StyledIconButton>
         </StyledDialogTitle>
         <StyledDialogContent>
-          <GoalForm goalId={editGoalId ?? undefined} onSave={handleCloseModal}/>
+          <GoalForm goalId={editGoalId ?? undefined} onSave={handleCloseModal} />
         </StyledDialogContent>
       </StyledDialog>
     </Layout>

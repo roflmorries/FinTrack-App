@@ -2,15 +2,15 @@ import { useAppDispatch, useAppSelector } from '../../shared/lib/hooks/redux/red
 import { FormControl, InputAdornment } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { selectGoalById } from '../../entities/fin-goals/goalSelectors';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
-import { createGoal, updateGoal } from '../../entities/fin-goals/goalThunk';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { goalSchema } from './validation/goalSchema';
 import { StyledForm, StyledTextField, StyledDatePicker, SubmitButton } from '../../shared/ui/Goals/GoalForm.styled';
+import { useGetGoalById } from '../../shared/lib/hooks/redux/goals/useGetGoalById';
+import { useCreateGoalMutation, useUpdateGoalMutation } from '../../app/store/api/goalsApi';
 
 type GoalFormProps = {
   onSave: () => void,
@@ -20,10 +20,13 @@ type GoalFormProps = {
 type GoalFormData = yup.InferType<typeof goalSchema>;
 
 
-export default function GoalForm({onSave, goalId}: GoalFormProps) {
+export default function GoalForm({ onSave, goalId }: GoalFormProps) {
   const dispatch = useAppDispatch();
   const userId = useAppSelector(state => state.user.currentUser?.uid);
-  const currentGoal = useAppSelector(state => goalId ? selectGoalById(state, goalId) : undefined);
+  // const currentGoal = useAppSelector(state => goalId ? selectGoalById(state, goalId) : undefined);
+  const currentGoal = useGetGoalById(userId, goalId);
+  const [createGoal, { isLoading: isCreating }] = useCreateGoalMutation();
+  const [updateGoal, { isLoading: isUpdating }] = useUpdateGoalMutation();
 
   const {
     control,
@@ -55,7 +58,7 @@ export default function GoalForm({onSave, goalId}: GoalFormProps) {
     }
   }, [goalId, currentGoal, reset]);
 
-  const onSubmit = (data: GoalFormData) => {
+  const onSubmit = async (data: GoalFormData) => {
     if (!userId) return;
 
     const goalData = {
@@ -70,13 +73,13 @@ export default function GoalForm({onSave, goalId}: GoalFormProps) {
         userId,
         changes: goalData
       };
-      dispatch(updateGoal(updatedGoal));
+      await updateGoal(updatedGoal).unwrap();
     } else {
       const newGoal = {
         userId,
         ...goalData
       };
-      dispatch(createGoal(newGoal));
+      await createGoal(newGoal).unwrap();
     }
 
     onSave();
@@ -164,11 +167,12 @@ export default function GoalForm({onSave, goalId}: GoalFormProps) {
           variant="outlined"
           fullWidth
           disabled={!userId || isSubmitting}
+          loading={isCreating || isUpdating}
         >
-          {isSubmitting 
-            ? 'Saving...' 
-            : goalId 
-              ? 'Update Goal' 
+          {isSubmitting
+            ? 'Saving...'
+            : goalId
+              ? 'Update Goal'
               : 'Create Goal'
           }
         </SubmitButton>

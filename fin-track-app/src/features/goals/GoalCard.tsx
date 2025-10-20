@@ -4,8 +4,8 @@ import { useState, useMemo } from 'react'
 import { Edit, Delete, CalendarToday, AttachMoney } from '@mui/icons-material'
 import dayjs from 'dayjs'
 import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes'
-import { selectGoalProgress } from '../../entities/fin-goals/goalProgressSelector'
 import { StyledCard, CardContent, CardHeader, GoalInfo, StatusBadge, GoalName, GoalDetails, DetailRow, ProgressSection, ProgressInfo, ProgressText, ProgressPercentage, ButtonsContainer, StyledIconButton, PopoverContent, StyledLinearProgress } from '../../shared/ui/Goals/GoalCard.styled'
+import { useGoalProgress } from '../../shared/lib/hooks/redux/goals/useGoalProgress'
 
 type GoalCardProps = Goal & {
   onEdit: (id: string) => void,
@@ -16,8 +16,9 @@ type GoalStatus = 'active' | 'completed' | 'outdated';
 
 
 export default function GoalCard({onEdit, onDelete, ...goal}: GoalCardProps) {
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const progress = useAppSelector(state => selectGoalProgress(state, goal.id));
+  const progress = useGoalProgress(userId, goal.id)
 
   const { status, progressPercent, daysLeft } = useMemo(() => {
     const progressPercent = goal.amount > 0 ? Math.min((progress / goal.amount) * 100, 100) : 0;
