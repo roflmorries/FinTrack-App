@@ -39,4 +39,11 @@ export const goalsApi = api.injectEndpoints({
       invalidatesTags: (result, error, id) => [{ type: 'Goal', id }]
     }),
   })
-})
+});
+
+export const {
+  useGetGoalsQuery,
+  useCreateGoalMutation,
+  useUpdateGoalMutation,
+  useDeleteGoalMutation
+} = goalsApi;
