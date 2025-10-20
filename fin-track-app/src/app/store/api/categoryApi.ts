@@ -1,8 +1,7 @@
 import { Category } from "../../../entities/categories/model/types";
-import { API_URL } from "../../../shared/config/config";
+import { API_URL_CATEGORIES } from "../../../shared/config/config";
 import { api } from "./api";
 
-const API_URL_CATEGORIES = `${API_URL}/categories`
 
 export const categoryApi = api.injectEndpoints({
   endpoints: builder => ({

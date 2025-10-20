@@ -1,8 +1,7 @@
 import { Transaction } from "../../../entities/transactions/model/types";
-import { API_URL } from "../../../shared/config/config";
+import { API_URL, API_URL_TRANSACTIONS } from "../../../shared/config/config";
 import { api } from "./api";
 
-const API_URL_TRANSACTIONS = `${API_URL}/transactions`;
 
 export const transactionApi = api.injectEndpoints({
   endpoints: builder => ({
@@ -45,7 +44,8 @@ export const transactionApi = api.injectEndpoints({
         method: 'POST',
         body: description
       }),
-      transformResponse: (response: { category: string }) => response.category
+      transformResponse: (response: { category: string }) => response.category,
+      invalidatesTags: [{ type: 'Category', id: 'LIST' }]
     })
   })
 })
