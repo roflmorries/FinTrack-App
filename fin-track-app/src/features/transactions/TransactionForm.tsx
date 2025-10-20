@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { useEffect, useMemo, useCallback, useState } from "react";
-import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
+// import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
 import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import { debounce } from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
@@ -21,6 +21,7 @@ import { transactionSchema } from './validation/transactionSchema';
 import { StyledForm, TypeFieldContainer, TypeLabel, StyledToggleButtonGroup, StyledTextField, StyledFormControl, AutoDetectIndicator, SubmitButton } from '../../shared/ui/Transaction/transactionForm.styled';
 import { useCreateTransactionMutation, useDetectCategoryByDescriptionMutation, useUpdateTransactionMutation } from "../../app/store/api/transactionApi";
 import { useGetTransactionById } from "../../shared/lib/hooks/redux/useGetTransactionById";
+import { useGetCategoriesQuery } from "../../app/store/api/categoryApi";
 
 interface TransactionFormProps {
   onSave: () => void;
@@ -31,7 +32,7 @@ type TransactionFormData = yup.InferType<typeof transactionSchema>;
 
 
 export default function TransactionForm({ onSave, transactionId }: TransactionFormProps) {
-  const categories = useAppSelector(selectAllCategories);
+  // const categories = useAppSelector(selectAllCategories);
   const userId = useAppSelector(state => state.user.currentUser?.uid);
   const currentTransaction = useGetTransactionById(userId, transactionId);
   const goals = useAppSelector(selectAllGoals);
@@ -41,6 +42,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   const [createTransaction, { isLoading: isCreating }] = useCreateTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
   const [detectCategoryByDescription, {isLoading: isDetecting, error}] = useDetectCategoryByDescriptionMutation();
+  const { data: categories = [] } = useGetCategoriesQuery(userId || '', {skip: !userId});
   const {
     control,
     handleSubmit,
@@ -198,7 +200,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
           render={({ field: { onChange, value, ...field } }) => (
             <StyledTextField
               {...field}
-              label="Amount"
+              // label="Amount"
               type="number"
               value={value || ''}
               onChange={(e) => onChange(Number(e.target.value))}
@@ -206,7 +208,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
               helperText={errors.amount?.message}
               fullWidth
               variant="outlined"
-              placeholder="0.00"
+              placeholder="Amount"
               inputProps={{
                 min: 0.01,
                 step: 0.01
