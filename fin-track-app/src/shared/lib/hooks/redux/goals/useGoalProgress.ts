@@ -13,7 +13,7 @@ export const useGoalProgress = (userId: string | undefined, goalId: string | und
   const { data: transactions = [] } = useFetchTransactionsQuery(userId || '', { skip: !userId || !goalId });
 
   return useMemo(() => {
-    if (!goalId) return;
+    if (!goalId) return 0;
 
     return transactions
       .filter(tx => tx.goalId === goalId)

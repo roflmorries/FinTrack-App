@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
-import { SelectAllTransactions } from '../../../entities/transactions/model/transactionsSelectors';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Transaction } from '../../../entities/transactions/model/types';
 import { Button } from '@mui/material';
+import { useFetchTransactionsQuery } from '../../../app/store/api/transactionApi';
 
 type Props = {}
 
@@ -227,7 +227,6 @@ const WidgetContainer = styled.div`
   }
 `;
 
-// Компонент для отображения одной транзакции
 const TransactionItem = memo(({ transaction }: { transaction: Transaction }) => (
   <div className="transaction-item">
     <div className="transaction-header">
@@ -249,13 +248,13 @@ const TransactionItem = memo(({ transaction }: { transaction: Transaction }) => 
 
 TransactionItem.displayName = 'TransactionItem';
 
-const TransactionSection = memo(({ 
-  title, 
-  type, 
-  transactions, 
+const TransactionSection = memo(({
+  title,
+  type,
+  transactions,
   icon,
-  onSeeMore 
-}: { 
+  onSeeMore
+}: {
   title: string;
   type: 'income' | 'expense';
   transactions: Transaction[];
@@ -272,7 +271,7 @@ const TransactionSection = memo(({
         See more
       </Button>
     </div>
-    
+
     {transactions.length > 0 ? (
       <div className="transaction-list">
         {transactions.map(transaction => (
@@ -293,9 +292,10 @@ const TransactionSection = memo(({
 
 TransactionSection.displayName = 'TransactionSection';
 
-const RecentTransactionsWidget = memo(({}: Props) => {
+const RecentTransactionsWidget = memo(({ }: Props) => {
   const navigate = useNavigate();
-  const allTransactions = useAppSelector(SelectAllTransactions);
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const { data: allTransactions = [] } = useFetchTransactionsQuery(userId || '', { skip: !userId })
 
   const { recentIncomes, recentExpenses } = useMemo(() => {
     const sortedTransactions = allTransactions
@@ -305,7 +305,7 @@ const RecentTransactionsWidget = memo(({}: Props) => {
     const recentIncomes = sortedTransactions
       .filter(tx => tx.type === 'income')
       .slice(0, 3);
-      
+
     const recentExpenses = sortedTransactions
       .filter(tx => tx.type === 'expense')
       .slice(0, 3);
@@ -321,7 +321,7 @@ const RecentTransactionsWidget = memo(({}: Props) => {
     <WidgetContainer>
       <div className="widget-content">
         <h3 className="widget-title">Recent Transactions</h3>
-        
+
         <div className="transactions-container">
           <TransactionSection
             title="Income"
@@ -330,7 +330,7 @@ const RecentTransactionsWidget = memo(({}: Props) => {
             icon=''
             onSeeMore={handleSeeMore}
           />
-          
+
           <TransactionSection
             title="Expenses"
             type="expense"

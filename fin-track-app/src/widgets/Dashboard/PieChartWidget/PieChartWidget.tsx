@@ -1,8 +1,9 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes'
-import { selectExpensesByCategory } from '../../../entities/categories/model/expensesByCategorySelector'
+// import { selectExpensesByCategory } from '../../../entities/categories/model/expensesByCategorySelector'
 import styled from 'styled-components';
 import { memo, useMemo } from 'react';
+import { useGetExpensesByCategory } from '../../../shared/lib/hooks/redux/categories/useGetExpensesByCategory';
 
 const WidgetContainer = styled.div`
   width: 100%;
@@ -120,7 +121,8 @@ const MemoizedTooltip = memo(() => (
 ));
 
 const PieChartWidget = memo(() => {
-  const data = useAppSelector(selectExpensesByCategory);
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const data = useGetExpensesByCategory(userId);
   
   const hasData = useMemo(() => {
     const result = data && Array.isArray(data) && data.length > 0;

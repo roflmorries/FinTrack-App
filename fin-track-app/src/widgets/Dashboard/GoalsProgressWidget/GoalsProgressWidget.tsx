@@ -1,8 +1,8 @@
 import { LinearProgress } from '@mui/material';
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
-import { selectActiveGoalsWithProgress } from '../../../entities/fin-goals/goalWithProgressSelector';
 import styled from 'styled-components';
 import { memo, useMemo } from 'react';
+import { useActiveGoalsWithProgress } from '../../../shared/lib/hooks/redux/goals/useActiveGoalsWithProgress';
 
 type Props = {}
 
@@ -197,7 +197,8 @@ const percent = useMemo(() => {
 GoalItem.displayName = 'GoalItem';
 
 const GoalsProgressWidget = memo(({}: Props) => {
-  const allGoals = useAppSelector(selectActiveGoalsWithProgress);
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const allGoals = useActiveGoalsWithProgress(userId);
   const goals = useMemo(() => {
     return allGoals.slice(0, 4);
   }, [allGoals]);
