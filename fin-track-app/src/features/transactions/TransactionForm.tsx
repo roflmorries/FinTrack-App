@@ -1,7 +1,5 @@
-import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
+import { useAppSelector } from "../../shared/lib/hooks/redux/reduxTypes";
 import { useEffect, useMemo, useCallback, useState } from "react";
-// import { selectAllCategories } from "../../entities/categories/model/categorySelectors";
-import { selectAllGoals } from "../../entities/fin-goals/goalSelectors";
 import { debounce } from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,6 +20,7 @@ import { StyledForm, TypeFieldContainer, TypeLabel, StyledToggleButtonGroup, Sty
 import { useCreateTransactionMutation, useDetectCategoryByDescriptionMutation, useUpdateTransactionMutation } from "../../app/store/api/transactionApi";
 import { useGetTransactionById } from "../../shared/lib/hooks/redux/useGetTransactionById";
 import { useGetCategoriesQuery } from "../../app/store/api/categoryApi";
+import { useGetGoalsQuery } from "../../app/store/api/goalsApi";
 
 interface TransactionFormProps {
   onSave: () => void;
@@ -35,14 +34,14 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
   // const categories = useAppSelector(selectAllCategories);
   const userId = useAppSelector(state => state.user.currentUser?.uid);
   const currentTransaction = useGetTransactionById(userId, transactionId);
-  const goals = useAppSelector(selectAllGoals);
+  const { data: goals = [] } = useGetGoalsQuery(userId || '', { skip: !userId });
   const [showAutoDetect, setShowAutoDetect] = useState(false);
   const [detectedCategory, setDetectedCategory] = useState('');
 
   const [createTransaction, { isLoading: isCreating }] = useCreateTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
-  const [detectCategoryByDescription, {isLoading: isDetecting, error}] = useDetectCategoryByDescriptionMutation();
-  const { data: categories = [] } = useGetCategoriesQuery(userId || '', {skip: !userId});
+  const [detectCategoryByDescription, { isLoading: isDetecting, error }] = useDetectCategoryByDescriptionMutation();
+  const { data: categories = [] } = useGetCategoriesQuery(userId || '', { skip: !userId });
   const {
     control,
     handleSubmit,
@@ -97,16 +96,16 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
         // );
 
         const category = await detectCategoryByDescription({ description: comment, userId }).unwrap();
-        
+
         if (category) {
           setValue('category', category);
           setDetectedCategory(category);
           setShowAutoDetect(true);
-          
+
           setTimeout(() => {
             setShowAutoDetect(false);
           }, 3000);
-          
+
           // dispatch(fetchCategories(userId));
         }
       } catch (error) {
@@ -116,19 +115,19 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
     [userId, setValue, detectCategoryByDescription]
   );
 
-  const categoryOptions = useMemo(() => 
-    categories.map(category => ({ 
-      value: category.name, 
-      label: category.name 
-    })), 
+  const categoryOptions = useMemo(() =>
+    categories.map(category => ({
+      value: category.name,
+      label: category.name
+    })),
     [categories]
   );
 
-  const goalOptions = useMemo(() => 
-    goals.map(goal => ({ 
-      value: goal.id, 
-      label: goal.name 
-    })), 
+  const goalOptions = useMemo(() =>
+    goals.map(goal => ({
+      value: goal.id,
+      label: goal.name
+    })),
     [goals]
   );
 
@@ -236,7 +235,7 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
             </StyledFormControl>
           )}
         />
-        
+
         <AutoDetectIndicator $show={showAutoDetect}>
           <AutoAwesome />
           <span>Auto-Detected Category</span>
@@ -317,10 +316,10 @@ export default function TransactionForm({ onSave, transactionId }: TransactionFo
           fullWidth
           disabled={!userId || isSubmitting}
         >
-          {isSubmitting 
-            ? 'Saving...' 
-            : transactionId 
-              ? 'Update Transaction' 
+          {isSubmitting
+            ? 'Saving...'
+            : transactionId
+              ? 'Update Transaction'
               : 'Create Transaction'
           }
         </SubmitButton>

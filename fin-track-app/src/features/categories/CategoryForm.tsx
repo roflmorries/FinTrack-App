@@ -1,6 +1,5 @@
 import { useAppSelector } from '../../shared/lib/hooks/redux/reduxTypes';
 import { useEffect } from 'react';
-import { selectCategoryById } from '../../entities/categories/model/categorySelectors';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { 
@@ -10,6 +9,7 @@ import {
 import { categorySchema, CategoryFormData } from './validation/categorySchema';
 import { StyledForm, StyledTextField, StyledFormControl, StyledColorInput, SubmitButton } from '../../shared/ui/Category/categoryForm.styled';
 import { useCreateCategoryMutation, useUpdateCategoryMutation } from '../../app/store/api/categoryApi';
+import { useGetCategoryById } from '../../shared/lib/hooks/redux/categories/useGetCategoryById';
 
 type CategoryFormProps = {
   onSave: () => void;
@@ -21,7 +21,8 @@ export default function CategoryForm({ onSave, categoryId }: CategoryFormProps) 
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
   const userId = useAppSelector(state => state.user.currentUser?.uid);
-  const currentCategory = useAppSelector(state => categoryId ? selectCategoryById(state, categoryId) : undefined);
+  // const currentCategory = useAppSelector(state => categoryId ? selectCategoryById(state, categoryId) : undefined);
+  const currentCategory = useGetCategoryById(userId, categoryId) as { name: string; color: string } | undefined;
 
   const {
     control,
