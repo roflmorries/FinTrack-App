@@ -12,8 +12,8 @@ import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
 import Button from '@mui/material/Button';
 import { exportTransactionsToCSV, exportTransactionsToPDF } from '../../../shared/lib/export/exportTransactions';
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes';
-import { SelectAllTransactions } from '../../../entities/transactions/model/transactionsSelectors';
 import styled from 'styled-components';
+import { useFetchTransactionsQuery } from '../../../app/store/api/transactionApi';
 
 
 
@@ -22,7 +22,7 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: "none",
   // gap: "2rem",
   fontWeight: 400,
-  
+
   // width: "100%",
 
   willChange: "transform",
@@ -79,7 +79,8 @@ const mainListItems = [
 ];
 
 export default function MenuContent() {
-  const transactions = useAppSelector(SelectAllTransactions)
+  const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const { data: transactions = [] } = useFetchTransactionsQuery(userId || '', { skip: !userId })
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
@@ -108,13 +109,13 @@ export default function MenuContent() {
         ))}
       </List>
       <Stack
-      sx={{
-        alignItems: 'flex-start', 
-        p: 1, 
-        m: 1,
-      }}
+        sx={{
+          alignItems: 'flex-start',
+          p: 1,
+          m: 1,
+        }}
       >
-        <Button 
+        <Button
           onClick={() => exportTransactionsToCSV(transactions)}
           sx={{
             color: 'rgba(255, 255, 255, 0.4) !important',
@@ -129,7 +130,7 @@ export default function MenuContent() {
         >
           Export transactions to CSV
         </Button>
-        <Button 
+        <Button
           onClick={() => exportTransactionsToPDF(transactions)}
           sx={{
             color: 'rgba(255, 255, 255, 0.4) !important',
