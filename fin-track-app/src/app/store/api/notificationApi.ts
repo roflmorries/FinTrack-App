@@ -5,7 +5,7 @@ import { api } from "./api";
 
 export const notificationApi = api.injectEndpoints({
   endpoints: builder => ({
-    getNotification: builder.query<Notification[], string>({
+    getNotifications: builder.query<Notification[], string>({
           query: (userId: string) => `${API_URL_NOTIFICATIONS}?userId=${userId}`,
           providesTags: (result) =>
             result
@@ -26,7 +26,7 @@ export const notificationApi = api.injectEndpoints({
         markAsRead: builder.mutation<Notification, string>({
           query: (id) => ({
             url: `${API_URL_NOTIFICATIONS}/${id}`,
-            method: 'PUT',
+            method: 'PATCH',
             body: {read: true}
           }),
           invalidatesTags: (result, error, id) => [{ type: 'Notification', id }]
@@ -45,7 +45,7 @@ export const notificationApi = api.injectEndpoints({
 });
 
 export const {
-  useGetNotificationQuery,
+  useGetNotificationsQuery,
   useAddNotificationMutation,
   useMarkAsReadMutation,
   useDeleteNotificationMutation
