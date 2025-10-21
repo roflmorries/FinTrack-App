@@ -1,7 +1,6 @@
 import { useAppSelector } from '../../../shared/lib/hooks/redux/reduxTypes'
 import { selectMonthlyBudget } from '../../../entities/user/selectors/selectMonthlyBudget'
 import MonthlyBudgetForm from '../../../features/auth/ui/MonthlyBudgetForm';
-import { selectMonthlyExpenses } from '../../../entities/user/selectors/selectMonthlyExpenses';
 import { Typography } from '@mui/material';
 import { PieChart, Pie, Cell } from 'recharts';
 import { memo, useMemo, useCallback, useState } from 'react';
@@ -11,6 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
 import { useBudgetNotifications } from '../../../shared/lib/hooks/useBudgetNotification';
 import styled from 'styled-components';
+import { useGetMonthlyExpenses } from '../../../shared/lib/hooks/redux/user/useGetMonthlyExpenses';
 
 const COLORS = ['#007AFF', '#FF3B30'];
 
@@ -166,8 +166,8 @@ const MemoizedBudgetChart = memo(({ data }: { data: any[] }) => (
 
 const MonthlyBudgetWidget = memo(() => {
   const budget = useAppSelector(selectMonthlyBudget);
-  const expenses = useAppSelector(selectMonthlyExpenses);
   const userId = useAppSelector(state => state.user.currentUser?.uid);
+  const expenses = useGetMonthlyExpenses(userId)
   const [open, setOpen] = useState(false);
 
   const { spent, left, data, hasBudget } = useMemo(() => {
